@@ -1,0 +1,10 @@
+[package]
+name = "grambot"
+version = "0.1.0"
+description = "Telegram Bot API library for Rust"
+authors = ["Federico Damián Schonborn <fdschonborn>"]
+license = "BSD-3-Clause"
+repository = "https://github.com/FedericoSchonborn/grambot"
+readme = "README.md"
+publish = false
+edition = "2021"
