@@ -8,3 +8,7 @@ repository = "https://github.com/FedericoSchonborn/grambot"
 readme = "README.md"
 publish = false
 edition = "2021"
+
+[dependencies]
+serde = { version = "1.0.136", features = ["derive"] }
+thiserror = "1.0.30"
