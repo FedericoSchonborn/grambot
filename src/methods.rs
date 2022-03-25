@@ -1,5 +1,7 @@
 use serde::Serialize;
 
+use crate::types::MessageEntity;
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(untagged)]
 pub enum ChatId {
@@ -31,12 +33,19 @@ pub enum ParseMode {
 pub struct SendMessage {
     pub chat_id: ChatId,
     pub text: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_mode: Option<ParseMode>,
-    // TODO: entities
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub entities: Option<Vec<MessageEntity>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_web_page_preview: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_notification: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protect_content: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reply_to_message_id: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_sending_without_reply: Option<bool>,
     // TODO: reply_markup
 }
@@ -51,6 +60,7 @@ impl SendMessage {
             chat_id: chat_id.into(),
             text: text.into(),
             parse_mode: None,
+            entities: None,
             disable_web_page_preview: None,
             disable_notification: None,
             protect_content: None,

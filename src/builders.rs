@@ -2,7 +2,7 @@ use crate::{
     bot::Bot,
     error::Error,
     methods::{ChatId, ParseMode, SendMessage},
-    types::Message,
+    types::{Message, MessageEntity},
 };
 
 pub struct SendMessageBuilder<'bot> {
@@ -25,6 +25,12 @@ impl<'bot> SendMessageBuilder<'bot> {
     #[must_use]
     pub fn parse_mode(mut self, value: ParseMode) -> Self {
         self.inner.parse_mode = Some(value);
+        self
+    }
+
+    #[must_use]
+    pub fn entities(mut self, value: Vec<MessageEntity>) -> Self {
+        self.inner.entities = Some(value);
         self
     }
 
