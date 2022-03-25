@@ -2,27 +2,26 @@ use thiserror::Error;
 
 use crate::output::ResponseParameters;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
-#[error("{description}")]
-pub struct Error {
-    pub(crate) description: String,
-    pub(crate) error_code: Option<i32>,
-    pub(crate) parameters: Option<ResponseParameters>,
-}
-
-impl Error {
-    #[must_use]
-    pub fn description(&self) -> &str {
-        &self.description
-    }
-
-    #[must_use]
-    pub fn error_code(&self) -> Option<i32> {
-        self.error_code
-    }
-
-    #[must_use]
-    pub fn parameters(&self) -> Option<&ResponseParameters> {
-        self.parameters.as_ref()
-    }
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error(transparent)]
+    UrlEncoded(#[from] serde_urlencoded::ser::Error),
+    #[error(transparent)]
+    Http(#[from] hyper::http::Error),
+    #[error(transparent)]
+    Hyper(#[from] hyper::Error),
+    #[error("status code: {0}")]
+    StatusCode(hyper::http::StatusCode),
+    #[error(transparent)]
+    Json(#[from] serde_json::Error),
+    #[error("{description}")]
+    Api {
+        description: String,
+        error_code: Option<i32>,
+        parameters: Option<ResponseParameters>,
+    },
+    #[error("missing result")]
+    MissingResult,
+    #[error("missing error description")]
+    MissingDescription,
 }
