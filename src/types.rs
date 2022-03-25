@@ -18,3 +18,9 @@ pub struct User {
     pub can_read_all_group_messages: Option<bool>,
     pub supports_inline_queries: Option<bool>,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+pub struct Message {
+    pub message_id: i32,
+    // TODO
+}

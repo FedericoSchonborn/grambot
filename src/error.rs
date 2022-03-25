@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use crate::output::ResponseParameters;
+use crate::types::ResponseParameters;
 
 #[derive(Debug, Error)]
 pub enum Error {

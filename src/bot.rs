@@ -3,8 +3,10 @@ use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::{
+    builders::SendMessageBuilder,
     error::Error,
-    output::{ResponseParameters, User},
+    methods::{ChatId, SendMessage},
+    types::{Message, ResponseParameters, User},
 };
 
 #[derive(Debug)]
@@ -24,7 +26,12 @@ impl Bot {
         }
     }
 
-    async fn request<P, T>(&self, method: Method, endpoint: &str, parameters: P) -> Result<T, Error>
+    pub(crate) async fn request<P, T>(
+        &self,
+        method: Method,
+        endpoint: &str,
+        parameters: P,
+    ) -> Result<T, Error>
     where
         P: Serialize,
         T: DeserializeOwned,
@@ -82,5 +89,18 @@ impl Bot {
         self.request::<_, bool>(Method::POST, "close", ())
             .await
             .map(|_| ())
+    }
+
+    #[allow(clippy::missing_errors_doc)]
+    pub async fn send_message(&self, params: SendMessage) -> Result<Message, Error> {
+        self.request(Method::POST, "sendMessage", params).await
+    }
+
+    pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessageBuilder<'_>
+    where
+        C: Into<ChatId>,
+        T: Into<String>,
+    {
+        SendMessageBuilder::new(self, chat_id, text)
     }
 }

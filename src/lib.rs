@@ -1,5 +1,7 @@
 #![warn(clippy::pedantic, clippy::cargo)]
 
 pub mod bot;
+pub mod builders;
 pub mod error;
-pub mod output;
+pub mod methods;
+pub mod types;
