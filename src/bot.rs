@@ -7,9 +7,9 @@ use crate::{
     methods::{
         builders::{GetUpdatesBuilder, SendMessageBuilder},
         types::ChatId,
-        GetUpdates, SendMessage,
+        GetChat, GetUpdates, SendMessage,
     },
-    types::{Message, Response, Update, User},
+    types::{Chat, Message, Response, Update, User},
 };
 
 mod builder;
@@ -109,5 +109,14 @@ impl Bot {
         T: Into<String>,
     {
         SendMessageBuilder::new(self, chat_id, text)
+    }
+
+    #[allow(clippy::missing_errors_doc)]
+    pub async fn get_chat<C>(&self, chat_id: C) -> Result<Chat, Error>
+    where
+        C: Into<ChatId>,
+    {
+        self.request(Method::GET, "getChat", GetChat::new(chat_id))
+            .await
     }
 }

@@ -2,9 +2,11 @@
 
 use serde::{Deserialize, Serialize};
 
+mod message_id;
 mod response;
 mod update;
 
+pub use message_id::*;
 pub use response::*;
 pub use update::*;
 
@@ -28,12 +30,29 @@ pub struct User {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+pub struct Chat {
+    pub id: i64,
+    #[serde(rename = "type")]
+    pub kind: ChatKind,
+    // TODO
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ChatKind {
+    Private,
+    Group,
+    Supergroup,
+    Channel,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct Message {
     pub message_id: i32,
     pub from: Option<User>,
     // TODO: sender_chat
     // TODO: date
-    // TODO: chat
+    pub chat: Chat,
     pub forward_from: Option<User>,
     // TODO: forward_from_chat
     pub forward_from_message_id: Option<i32>,
