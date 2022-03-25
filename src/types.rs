@@ -1,4 +1,12 @@
+//! Types returned from methods.
+
 use serde::{Deserialize, Serialize};
+
+mod response;
+mod update;
+
+pub use response::*;
+pub use update::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct ResponseParameters {

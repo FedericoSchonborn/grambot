@@ -3,13 +3,17 @@ use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
-    builders::{Builder, GetUpdatesBuilder, SendMessageBuilder},
     error::Error,
-    methods::{ChatId, GetUpdates, SendMessage},
-    response::Response,
-    types::{Message, User},
-    update::Update,
+    methods::{
+        builders::{GetUpdatesBuilder, SendMessageBuilder},
+        types::ChatId,
+        GetUpdates, SendMessage,
+    },
+    types::{Message, Response, Update, User},
 };
+
+mod builder;
+pub use builder::*;
 
 pub(crate) const DEFAULT_SERVER: &str = "https://api.telegram.org";
 

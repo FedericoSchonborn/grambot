@@ -1,7 +1,8 @@
 use thiserror::Error;
 
-use crate::response;
+use crate::types::ResponseError;
 
+/// Compound error type.
 #[derive(Debug, Error)]
 pub enum Error {
     #[error(transparent)]
@@ -13,5 +14,5 @@ pub enum Error {
     #[error(transparent)]
     Json(#[from] serde_json::Error),
     #[error(transparent)]
-    Response(#[from] response::Error),
+    Response(#[from] ResponseError),
 }

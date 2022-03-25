@@ -1,7 +1,7 @@
 use std::env::var;
 
 use anyhow::Result;
-use grambot::{bot::Bot, methods::AllowedUpdate};
+use grambot::{methods::types::AllowedUpdate, Bot};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {

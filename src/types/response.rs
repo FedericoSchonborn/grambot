@@ -6,18 +6,20 @@ use crate::types::ResponseParameters;
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Response<T> {
     Ok(T),
-    Err(Error),
+    Err(ResponseError),
 }
 
+/// Error type for errors thrown by the API.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
 #[error("{description}")]
-pub struct Error {
+#[allow(clippy::module_name_repetitions)]
+pub struct ResponseError {
     description: String,
     error_code: Option<i32>,
     parameters: Option<ResponseParameters>,
 }
 
-impl Error {
+impl ResponseError {
     #[must_use]
     pub fn description(&self) -> &str {
         &self.description
@@ -59,7 +61,7 @@ where
                     .ok_or_else(|| DeError::missing_field("result"))?,
             ))
         } else {
-            Ok(Response::Err(Error {
+            Ok(Response::Err(ResponseError {
                 description: inner
                     .description
                     .ok_or_else(|| DeError::missing_field("description"))?,
