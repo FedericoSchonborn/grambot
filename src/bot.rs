@@ -96,6 +96,7 @@ impl Bot {
         self.request(Method::POST, "sendMessage", params).await
     }
 
+    #[must_use]
     pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessageBuilder<'_>
     where
         C: Into<ChatId>,
