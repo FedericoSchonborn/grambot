@@ -30,7 +30,7 @@ impl Bot {
         &self,
         method: Method,
         endpoint: &str,
-        parameters: P,
+        params: P,
     ) -> Result<T, Error>
     where
         P: Serialize,
@@ -45,7 +45,7 @@ impl Bot {
             pub parameters: Option<ResponseParameters>,
         }
 
-        let query = serde_urlencoded::to_string(&parameters)?;
+        let query = serde_urlencoded::to_string(&params)?;
         let request = Request::builder()
             .method(method)
             .uri(format!(

@@ -1,14 +1,12 @@
-use std::env;
+use std::env::var;
 
 use anyhow::Result;
 use grambot::{bot::Bot, methods::SendMessage};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
-    let token = env::var("GRAMBOT_EXAMPLE_TOKEN")?;
-    let chat_id = env::var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?;
-
-    let bot = Bot::new(token);
+    let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
+    let chat_id = var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?;
 
     // Create a SendMessage object.
     let mut params = SendMessage::new(chat_id, "Hello, world!");
