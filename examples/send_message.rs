@@ -15,13 +15,16 @@ async fn main() -> Result<()> {
     // We don't want to wake up anybody! ;)
     params.disable_notification = Some(true);
     // Send the message.
-    bot.send_message(params).await?;
+    let message = bot.send_message(params).await?;
+    println!("{message:#?}");
 
     // You can also use the builder API.
-    bot.new_message(chat_id, "Hello again!")
+    let message = bot
+        .new_message(chat_id, "Hello again!")
         .disable_notification(true)
         .send()
         .await?;
+    println!("{message:#?}");
 
     Ok(())
 }
