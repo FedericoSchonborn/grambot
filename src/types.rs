@@ -19,6 +19,31 @@ pub struct User {
     pub supports_inline_queries: Option<bool>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+pub struct Message {
+    pub message_id: i32,
+    pub from: Option<User>,
+    // TODO: sender_chat
+    // TODO: date
+    // TODO: chat
+    pub forward_from: Option<User>,
+    // TODO: forward_from_chat
+    pub forward_from_message_id: Option<i32>,
+    pub forward_signature: Option<String>,
+    pub forward_sender_name: Option<String>,
+    // TODO: forward_date
+    pub is_automatic_forward: Option<bool>,
+    pub reply_to_message: Option<Box<Message>>,
+    pub via_bot: Option<User>,
+    // TODO: edit_date
+    pub has_protected_content: Option<bool>,
+    pub media_group_id: Option<String>,
+    pub author_signature: Option<String>,
+    pub text: Option<String>,
+    pub entities: Option<Vec<MessageEntity>>,
+    // TODO
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 pub struct MessageEntity {
     #[serde(flatten)]
@@ -46,29 +71,4 @@ pub enum MessageEntityKind {
     Pre { language: Option<String> },
     TextLink { url: String },
     TextMention { user: User },
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
-pub struct Message {
-    pub message_id: i32,
-    pub from: Option<User>,
-    // TODO: sender_chat
-    // TODO: date
-    // TODO: chat
-    pub forward_from: Option<User>,
-    // TODO: forward_from_chat
-    pub forward_from_message_id: Option<i32>,
-    pub forward_signature: Option<String>,
-    pub forward_sender_name: Option<String>,
-    // TODO: forward_date
-    pub is_automatic_forward: Option<bool>,
-    pub reply_to_message: Option<Box<Message>>,
-    pub via_bot: Option<User>,
-    // TODO: edit_date
-    pub has_protected_content: Option<bool>,
-    pub media_group_id: Option<String>,
-    pub author_signature: Option<String>,
-    pub text: Option<String>,
-    pub entities: Option<Vec<MessageEntity>>,
-    // TODO
 }

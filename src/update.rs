@@ -33,32 +33,22 @@ impl<'de> Deserialize<'de> for Update {
             // TODO
         }
 
-        let inner @ Inner { update_id: id, .. } = Inner::deserialize(deserializer)?;
-        if let Some(message) = inner.message {
-            return Ok(Update {
-                id,
-                kind: UpdateKind::Message(message),
-            });
-        }
-        if let Some(edited_message) = inner.edited_message {
-            return Ok(Update {
-                id,
-                kind: UpdateKind::EditedMessage(edited_message),
-            });
-        }
-        if let Some(channel_post) = inner.channel_post {
-            return Ok(Update {
-                id,
-                kind: UpdateKind::ChannelPost(channel_post),
-            });
-        }
-        if let Some(edited_channel_post) = inner.edited_channel_post {
-            return Ok(Update {
-                id,
-                kind: UpdateKind::EditedChannelPost(edited_channel_post),
-            });
-        }
-
-        todo!()
+        let inner = Inner::deserialize(deserializer)?;
+        Ok(Update {
+            id: inner.update_id,
+            kind: {
+                if let Some(message) = inner.message {
+                    UpdateKind::Message(message)
+                } else if let Some(edited_message) = inner.edited_message {
+                    UpdateKind::EditedMessage(edited_message)
+                } else if let Some(channel_post) = inner.channel_post {
+                    UpdateKind::ChannelPost(channel_post)
+                } else if let Some(edited_channel_post) = inner.edited_channel_post {
+                    UpdateKind::EditedChannelPost(edited_channel_post)
+                } else {
+                    todo!()
+                }
+            },
+        })
     }
 }

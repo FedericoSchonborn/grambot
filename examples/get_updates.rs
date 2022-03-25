@@ -8,12 +8,11 @@ async fn main() -> Result<()> {
     let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
     println!(
         "{:#?}",
-        bot.get_updates_with()
+        bot.new_get_updates()
             // Only get new messages.
             .allowed_updates(vec![AllowedUpdate::Message])
             .send()
-            .await
-            .unwrap()
+            .await?
     );
 
     Ok(())

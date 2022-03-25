@@ -70,7 +70,7 @@ impl Bot {
     }
 
     #[must_use]
-    pub fn get_updates_with(&self) -> GetUpdatesBuilder<'_> {
+    pub fn new_get_updates(&self) -> GetUpdatesBuilder<'_> {
         GetUpdatesBuilder::new(self)
     }
 
