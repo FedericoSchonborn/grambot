@@ -2,6 +2,40 @@ use serde::Serialize;
 
 use crate::types::MessageEntity;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AllowedUpdate {
+    Message,
+    EditedMessage,
+    ChannelPost,
+    EditedChannelPost,
+    InlineQuery,
+    ChosenInlineResult,
+    CallbackQuery,
+    ShippingQuery,
+    PreCheckoutQuery,
+    Poll,
+    PollAnswer,
+    MyChatMember,
+    ChatMember,
+    CanJoinRequest,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Default)]
+pub struct GetUpdates {
+    pub offset: Option<i32>,
+    pub limit: Option<i8>,
+    pub timeout: Option<i32>,
+    pub allowed_updates: Option<Vec<AllowedUpdate>>,
+}
+
+impl GetUpdates {
+    #[must_use]
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(untagged)]
 pub enum ChatId {

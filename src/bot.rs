@@ -3,10 +3,11 @@ use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::{
-    builders::{Builder, SendMessageBuilder},
+    builders::{Builder, GetUpdatesBuilder, SendMessageBuilder},
     error::Error,
-    methods::{ChatId, SendMessage},
+    methods::{ChatId, GetUpdates, SendMessage},
     types::{Message, ResponseParameters, User},
+    update::Update,
 };
 
 pub(crate) const DEFAULT_SERVER: &str = "https://api.telegram.org";
@@ -54,15 +55,14 @@ impl Bot {
             pub parameters: Option<ResponseParameters>,
         }
 
-        let query = serde_urlencoded::to_string(&params)?;
         let request = Request::builder()
             .method(method)
             .uri(format!(
-                "{server}/bot{token}/{endpoint}?{query}",
+                "{server}/bot{token}/{endpoint}",
                 server = self.server,
                 token = self.token,
             ))
-            .body(Body::empty())?;
+            .body(Body::from(serde_json::to_string(&params)?))?;
 
         let (Parts { status, .. }, body) = self.client.request(request).await?.into_parts();
         if !status.is_success() {
@@ -80,6 +80,16 @@ impl Bot {
                 parameters: response.parameters,
             })
         }
+    }
+
+    #[allow(clippy::missing_errors_doc)]
+    pub async fn get_updates(&self, params: GetUpdates) -> Result<Vec<Update>, Error> {
+        self.request(Method::GET, "getUpdates", params).await
+    }
+
+    #[must_use]
+    pub fn get_updates_with(&self) -> GetUpdatesBuilder<'_> {
+        GetUpdatesBuilder::new(self)
     }
 
     #[allow(clippy::missing_errors_doc)]

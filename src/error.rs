@@ -5,8 +5,6 @@ use crate::types::ResponseParameters;
 #[derive(Debug, Error)]
 pub enum Error {
     #[error(transparent)]
-    UrlEncoded(#[from] serde_urlencoded::ser::Error),
-    #[error(transparent)]
     Http(#[from] hyper::http::Error),
     #[error(transparent)]
     Hyper(#[from] hyper::Error),
