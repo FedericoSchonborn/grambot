@@ -1,5 +1,7 @@
 //! Method parameters.
 
+use std::collections::HashSet;
+
 use serde::Serialize;
 
 use crate::{
@@ -10,7 +12,7 @@ use crate::{
 pub mod builders;
 pub mod types;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Default)]
 pub struct GetUpdates {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub offset: Option<i32>,
@@ -19,7 +21,7 @@ pub struct GetUpdates {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub timeout: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub allowed_updates: Option<Vec<AllowedUpdate>>,
+    pub allowed_updates: Option<HashSet<AllowedUpdate>>,
 }
 
 impl GetUpdates {
