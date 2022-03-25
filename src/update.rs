@@ -24,7 +24,7 @@ impl<'de> Deserialize<'de> for Update {
         D: Deserializer<'de>,
     {
         #[derive(Deserialize)]
-        struct RawUpdate {
+        struct Inner {
             update_id: i32,
             message: Option<Message>,
             edited_message: Option<Message>,
@@ -33,26 +33,26 @@ impl<'de> Deserialize<'de> for Update {
             // TODO
         }
 
-        let update @ RawUpdate { update_id: id, .. } = RawUpdate::deserialize(deserializer)?;
-        if let Some(message) = update.message {
+        let inner @ Inner { update_id: id, .. } = Inner::deserialize(deserializer)?;
+        if let Some(message) = inner.message {
             return Ok(Update {
                 id,
                 kind: UpdateKind::Message(message),
             });
         }
-        if let Some(edited_message) = update.edited_message {
+        if let Some(edited_message) = inner.edited_message {
             return Ok(Update {
                 id,
                 kind: UpdateKind::EditedMessage(edited_message),
             });
         }
-        if let Some(channel_post) = update.channel_post {
+        if let Some(channel_post) = inner.channel_post {
             return Ok(Update {
                 id,
                 kind: UpdateKind::ChannelPost(channel_post),
             });
         }
-        if let Some(edited_channel_post) = update.edited_channel_post {
+        if let Some(edited_channel_post) = inner.edited_channel_post {
             return Ok(Update {
                 id,
                 kind: UpdateKind::EditedChannelPost(edited_channel_post),

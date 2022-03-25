@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use crate::types::ResponseParameters;
+use crate::response;
 
 #[derive(Debug, Error)]
 pub enum Error {
@@ -12,14 +12,6 @@ pub enum Error {
     StatusCode(hyper::http::StatusCode),
     #[error(transparent)]
     Json(#[from] serde_json::Error),
-    #[error("{description}")]
-    Api {
-        description: String,
-        error_code: Option<i32>,
-        parameters: Option<ResponseParameters>,
-    },
-    #[error("missing result")]
-    MissingResult,
-    #[error("missing error description")]
-    MissingDescription,
+    #[error(transparent)]
+    Response(#[from] response::Error),
 }

@@ -1,12 +1,13 @@
 use hyper::{body, client::HttpConnector, http::response::Parts, Body, Client, Method, Request};
 use hyper_tls::HttpsConnector;
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     builders::{Builder, GetUpdatesBuilder, SendMessageBuilder},
     error::Error,
     methods::{ChatId, GetUpdates, SendMessage},
-    types::{Message, ResponseParameters, User},
+    response::Response,
+    types::{Message, User},
     update::Update,
 };
 
@@ -36,25 +37,11 @@ impl Bot {
         Builder::new()
     }
 
-    pub(crate) async fn request<P, T>(
-        &self,
-        method: Method,
-        endpoint: &str,
-        params: P,
-    ) -> Result<T, Error>
+    async fn request<P, T>(&self, method: Method, endpoint: &str, params: P) -> Result<T, Error>
     where
         P: Serialize,
         T: DeserializeOwned,
     {
-        #[derive(Deserialize)]
-        struct Response<T> {
-            pub ok: bool,
-            pub description: Option<String>,
-            pub result: Option<T>,
-            pub error_code: Option<i32>,
-            pub parameters: Option<ResponseParameters>,
-        }
-
         let request = Request::builder()
             .method(method)
             .uri(format!(
@@ -71,14 +58,9 @@ impl Bot {
 
         let body = body::to_bytes(body).await?;
         let response: Response<T> = serde_json::from_slice(&body)?;
-        if response.ok {
-            Ok(response.result.ok_or(Error::MissingResult)?)
-        } else {
-            Err(Error::Api {
-                description: response.description.ok_or(Error::MissingDescription)?,
-                error_code: response.error_code,
-                parameters: response.parameters,
-            })
+        match response {
+            Response::Ok(result) => Ok(result),
+            Response::Err(err) => Err(Error::Response(err)),
         }
     }
 
