@@ -3,16 +3,19 @@ use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::{
-    builders::SendMessageBuilder,
+    builders::{Builder, SendMessageBuilder},
     error::Error,
     methods::{ChatId, SendMessage},
     types::{Message, ResponseParameters, User},
 };
 
+pub(crate) const DEFAULT_SERVER: &str = "https://api.telegram.org";
+
 #[derive(Debug)]
 pub struct Bot {
-    client: Client<HttpsConnector<HttpConnector>>,
-    token: String,
+    pub(crate) client: Client<HttpsConnector<HttpConnector>>,
+    pub(crate) server: String,
+    pub(crate) token: String,
 }
 
 impl Bot {
@@ -22,8 +25,14 @@ impl Bot {
     {
         Self {
             client: Client::builder().build(HttpsConnector::new()),
+            server: String::from(DEFAULT_SERVER),
             token: token.into(),
         }
+    }
+
+    #[must_use]
+    pub fn builder() -> Builder {
+        Builder::new()
     }
 
     pub(crate) async fn request<P, T>(
@@ -49,7 +58,8 @@ impl Bot {
         let request = Request::builder()
             .method(method)
             .uri(format!(
-                "https://api.telegram.org/bot{token}/{endpoint}?{query}",
+                "{server}/bot{token}/{endpoint}?{query}",
+                server = self.server,
                 token = self.token,
             ))
             .body(Body::empty())?;
