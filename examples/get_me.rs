@@ -7,8 +7,7 @@ use grambot::bot::Bot;
 async fn main() -> Result<()> {
     let token = env::var("GRAMBOT_EXAMPLE_TOKEN")?;
     let bot = Bot::new(token);
-    println!("{:#?}", bot.log_out().await);
-    println!("{:#?}", bot.log_out().await);
+    println!("{:#?}", bot.get_me().await);
 
     Ok(())
 }
