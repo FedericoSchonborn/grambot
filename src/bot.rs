@@ -1,4 +1,4 @@
-use hyper::{body, client::HttpConnector, http::response::Parts, Body, Client, Method, Request};
+use hyper::{body, client::HttpConnector, Body, Client, Method, Request};
 use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Serialize};
 
@@ -46,6 +46,7 @@ impl Bot {
         P: Serialize,
         T: DeserializeOwned,
     {
+        let content = serde_json::to_string(&params)?;
         let request = Request::builder()
             .method(method)
             .uri(format!(
@@ -53,15 +54,12 @@ impl Bot {
                 server = self.server,
                 token = self.token,
             ))
-            .body(Body::from(serde_json::to_string(&params)?))?;
+            .header("Content-Type", "application/json")
+            .body(Body::from(content))?;
 
-        let (Parts { status, .. }, body) = self.client.request(request).await?.into_parts();
-        if !status.is_success() {
-            return Err(Error::StatusCode(status));
-        }
-
-        let body = body::to_bytes(body).await?;
-        let response: Response<T> = serde_json::from_slice(&body)?;
+        let body = self.client.request(request).await?.into_body();
+        let bytes = body::to_bytes(body).await?;
+        let response: Response<T> = serde_json::from_slice(&bytes)?;
         match response {
             Response::Ok(result) => Ok(result),
             Response::Err(err) => Err(Error::Response(err)),

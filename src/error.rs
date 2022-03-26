@@ -9,8 +9,6 @@ pub enum Error {
     Http(#[from] hyper::http::Error),
     #[error(transparent)]
     Hyper(#[from] hyper::Error),
-    #[error("status code: {0}")]
-    StatusCode(hyper::http::StatusCode),
     #[error(transparent)]
     Json(#[from] serde_json::Error),
     #[error(transparent)]
