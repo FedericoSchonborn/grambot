@@ -1,0 +1,42 @@
+use std::{
+    fmt::{self, Display, Formatter},
+    str::FromStr,
+};
+
+use serde::Serialize;
+use thiserror::Error;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
+pub enum ParseMode {
+    #[serde(rename = "HTML")]
+    Html,
+    Markdown,
+    MarkdownV2,
+}
+
+impl Display for ParseMode {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str(match self {
+            Self::Html => "HTML",
+            Self::Markdown => "Markdown",
+            Self::MarkdownV2 => "MarkdownV2",
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
+#[error("expected one of `HTML`, `Markdown`, `MarkdownV2`")]
+pub struct TryFromParseModeError;
+
+impl FromStr for ParseMode {
+    type Err = TryFromParseModeError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "HTML" => Ok(Self::Html),
+            "Markdown" => Ok(Self::Markdown),
+            "MarkdownV2" => Ok(Self::MarkdownV2),
+            _ => Err(TryFromParseModeError),
+        }
+    }
+}
