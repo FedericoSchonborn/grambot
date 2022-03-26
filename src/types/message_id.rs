@@ -1,19 +1,21 @@
-use serde::{Deserialize, Deserializer};
+use serde::Deserialize;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[serde(from = "raw::MessageId")]
 pub struct MessageId(pub i32);
 
-impl<'de> Deserialize<'de> for MessageId {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        #[derive(Deserialize)]
-        struct Inner {
-            message_id: i32,
-        }
+mod raw {
+    #[allow(clippy::wildcard_imports)]
+    use super::*;
 
-        let inner = Inner::deserialize(deserializer)?;
-        Ok(Self(inner.message_id))
+    #[derive(Deserialize)]
+    pub struct MessageId {
+        message_id: i32,
+    }
+
+    impl From<MessageId> for super::MessageId {
+        fn from(raw: MessageId) -> Self {
+            Self(raw.message_id)
+        }
     }
 }

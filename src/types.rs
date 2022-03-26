@@ -1,6 +1,7 @@
 //! Types returned from methods.
 
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 mod message_id;
 mod response;
@@ -10,10 +11,49 @@ pub use message_id::*;
 pub use response::*;
 pub use update::*;
 
+use crate::shared::MessageEntity;
+
+/// Error type for errors thrown by the API.
+#[allow(clippy::module_name_repetitions)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
+#[error("{description}")]
+pub struct ResponseError {
+    description: String,
+    error_code: Option<i32>,
+    parameters: Option<ResponseParameters>,
+}
+
+impl ResponseError {
+    #[must_use]
+    pub fn description(&self) -> &str {
+        &self.description
+    }
+
+    #[must_use]
+    pub fn error_code(&self) -> Option<i32> {
+        self.error_code
+    }
+
+    #[must_use]
+    pub fn parameters(&self) -> Option<ResponseParameters> {
+        self.parameters
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct ResponseParameters {
     pub migrate_to_chat_id: i64,
     pub retry_after: i32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[allow(clippy::module_name_repetitions)]
+pub enum UpdateKind {
+    Message(Message),
+    EditedMessage(Message),
+    ChannelPost(Message),
+    EditedChannelPost(Message),
+    // TODO
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
@@ -69,33 +109,4 @@ pub struct Message {
     pub text: Option<String>,
     pub entities: Option<Vec<MessageEntity>>,
     // TODO
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
-pub struct MessageEntity {
-    #[serde(flatten)]
-    pub kind: MessageEntityKind,
-    pub offset: i32,
-    pub length: i32,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
-#[serde(tag = "type", rename_all = "snake_case")]
-pub enum MessageEntityKind {
-    Mention,
-    Hashtag,
-    Cashtag,
-    BotCommand,
-    Url,
-    Email,
-    PhoneNumber,
-    Bold,
-    Italic,
-    Underline,
-    Strikethrough,
-    Spoiler,
-    Code,
-    Pre { language: Option<String> },
-    TextLink { url: String },
-    TextMention { user: User },
 }

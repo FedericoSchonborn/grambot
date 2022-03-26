@@ -9,9 +9,9 @@ async fn main() -> Result<()> {
     let message = bot
         .new_message(
             var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?,
-            "<b>Hello, world!</b>",
+            "*Hello, world\\!*",
         )
-        .parse_mode(ParseMode::Html)
+        .parse_mode(ParseMode::MarkdownV2)
         .disable_notification(true)
         .send()
         .await?;

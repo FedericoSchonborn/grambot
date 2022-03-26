@@ -3,6 +3,7 @@
 pub mod bot;
 mod error;
 pub mod methods;
+pub mod shared;
 pub mod types;
 
 #[doc(inline)]

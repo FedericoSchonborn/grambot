@@ -1,9 +1,10 @@
 use crate::{
     methods::{
-        types::{ChatId, ParseMode},
+        types::{ChatId, ParseMode, ReplyMarkup},
         SendMessage,
     },
-    types::{Message, MessageEntity},
+    shared::MessageEntity,
+    types::Message,
     Bot, Error,
 };
 
@@ -65,6 +66,15 @@ impl<'bot> SendMessageBuilder<'bot> {
     #[must_use]
     pub fn allow_sending_without_reply(mut self, value: bool) -> Self {
         self.inner.allow_sending_without_reply = Some(value);
+        self
+    }
+
+    #[must_use]
+    pub fn reply_markup<T>(mut self, value: T) -> Self
+    where
+        T: Into<ReplyMarkup>,
+    {
+        self.inner.reply_markup = Some(value.into());
         self
     }
 

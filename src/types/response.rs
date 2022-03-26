@@ -1,73 +1,40 @@
-use serde::{de::Error as DeError, Deserialize, Deserializer};
-use thiserror::Error;
+use serde::Deserialize;
 
-use crate::types::ResponseParameters;
+use crate::types::{ResponseError, ResponseParameters};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[serde(from = "raw::Response<T>")]
 pub enum Response<T> {
     Ok(T),
     Err(ResponseError),
 }
 
-/// Error type for errors thrown by the API.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
-#[error("{description}")]
-#[allow(clippy::module_name_repetitions)]
-pub struct ResponseError {
-    description: String,
-    error_code: Option<i32>,
-    parameters: Option<ResponseParameters>,
-}
+mod raw {
+    #[allow(clippy::wildcard_imports)]
+    use super::*;
 
-impl ResponseError {
-    #[must_use]
-    pub fn description(&self) -> &str {
-        &self.description
+    #[derive(Deserialize)]
+    pub struct Response<T> {
+        ok: bool,
+        description: Option<String>,
+        result: Option<T>,
+        error_code: Option<i32>,
+        parameters: Option<ResponseParameters>,
     }
 
-    #[must_use]
-    pub fn error_code(&self) -> Option<i32> {
-        self.error_code
-    }
-
-    #[must_use]
-    pub fn parameters(&self) -> Option<ResponseParameters> {
-        self.parameters
-    }
-}
-
-impl<'de, T> Deserialize<'de> for Response<T>
-where
-    T: Deserialize<'de>,
-{
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        #[derive(Deserialize)]
-        struct Inner<T> {
-            ok: bool,
-            description: Option<String>,
-            result: Option<T>,
-            error_code: Option<i32>,
-            parameters: Option<ResponseParameters>,
-        }
-
-        let inner = Inner::deserialize(deserializer)?;
-        if inner.ok {
-            Ok(Response::Ok(
-                inner
-                    .result
-                    .ok_or_else(|| DeError::missing_field("result"))?,
-            ))
-        } else {
-            Ok(Response::Err(ResponseError {
-                description: inner
-                    .description
-                    .ok_or_else(|| DeError::missing_field("description"))?,
-                error_code: inner.error_code,
-                parameters: inner.parameters,
-            }))
+    impl<T> From<Response<T>> for super::Response<T> {
+        fn from(raw: Response<T>) -> Self {
+            if raw.ok {
+                Self::Ok(raw.result.expect("missing result field in `Ok` response"))
+            } else {
+                Self::Err(ResponseError {
+                    description: raw
+                        .description
+                        .expect("missing description field in `Err` response"),
+                    error_code: raw.error_code,
+                    parameters: raw.parameters,
+                })
+            }
         }
     }
 }
