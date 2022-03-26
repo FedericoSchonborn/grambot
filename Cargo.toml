@@ -18,5 +18,4 @@ thiserror = "1.0.30"
 
 [dev-dependencies]
 anyhow = "1.0.56"
-maplit = "1.0.2"
 tokio = { version = "1.17.0", features = ["macros", "rt"] }

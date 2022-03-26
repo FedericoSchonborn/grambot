@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use serde::Serialize;
 
 use crate::methods::types::AllowedUpdate;
@@ -13,7 +11,7 @@ pub struct GetUpdates {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub timeout: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub allowed_updates: Option<HashSet<AllowedUpdate>>,
+    pub allowed_updates: Option<Vec<AllowedUpdate>>,
 }
 
 impl GetUpdates {

@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use crate::{
     methods::{types::AllowedUpdate, GetUpdates},
     types::Update,
@@ -41,7 +39,7 @@ impl<'bot> GetUpdatesBuilder<'bot> {
     }
 
     #[must_use]
-    pub fn allowed_updates(mut self, value: HashSet<AllowedUpdate>) -> Self {
+    pub fn allowed_updates(mut self, value: Vec<AllowedUpdate>) -> Self {
         self.inner.allowed_updates = Some(value);
         self
     }

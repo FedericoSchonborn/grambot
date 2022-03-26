@@ -2,7 +2,6 @@ use std::env::var;
 
 use anyhow::Result;
 use grambot::{methods::types::AllowedUpdate, Bot};
-use maplit::hashset;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
@@ -11,7 +10,7 @@ async fn main() -> Result<()> {
         "{:#?}",
         bot.new_get_updates()
             // Only get updates with the "message" type.
-            .allowed_updates(hashset![AllowedUpdate::Message])
+            .allowed_updates(vec![AllowedUpdate::Message])
             .send()
             .await?
     );
