@@ -9,7 +9,8 @@ use crate::{
         types::ChatId,
         GetChat, GetUpdates, SendMessage,
     },
-    types::{Chat, Message, Response, Update, User},
+    shared::User,
+    types::{Chat, Message, Response, Update},
 };
 
 mod builder;

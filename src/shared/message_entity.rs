@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::types::User;
+use crate::shared::User;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 pub struct MessageEntity {

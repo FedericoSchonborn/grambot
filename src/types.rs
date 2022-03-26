@@ -1,6 +1,6 @@
 //! Types returned from methods.
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use thiserror::Error;
 
 mod message_id;
@@ -11,7 +11,7 @@ pub use message_id::*;
 pub use response::*;
 pub use update::*;
 
-use crate::shared::MessageEntity;
+use crate::shared::{MessageEntity, User};
 
 /// Error type for errors thrown by the API.
 #[allow(clippy::module_name_repetitions)]
@@ -54,19 +54,6 @@ pub enum UpdateKind {
     ChannelPost(Message),
     EditedChannelPost(Message),
     // TODO
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
-pub struct User {
-    pub id: i64,
-    pub is_bot: bool,
-    pub first_name: String,
-    pub last_name: Option<String>,
-    pub username: Option<String>,
-    pub language_code: Option<String>,
-    pub can_join_groups: Option<bool>,
-    pub can_read_all_group_messages: Option<bool>,
-    pub supports_inline_queries: Option<bool>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
