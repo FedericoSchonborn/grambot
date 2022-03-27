@@ -6,8 +6,11 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     error::Error,
-    methods::{Close, ForwardMessage, GetChat, GetMe, GetUpdates, LogOut, SendDice, SendMessage},
-    types::{ChatId, Response},
+    methods::{
+        Close, ForwardMessage, GetChat, GetMe, GetUpdates, LogOut, SendChatAction, SendDice,
+        SendMessage,
+    },
+    types::{ChatAction, ChatId, Response},
 };
 
 mod builder;
@@ -118,6 +121,14 @@ impl Bot {
         C: Into<ChatId>,
     {
         SendDice::new(self, chat_id)
+    }
+
+    #[must_use]
+    pub fn new_chat_action<C>(&self, chat_id: C, action: ChatAction) -> SendChatAction<'_>
+    where
+        C: Into<ChatId>,
+    {
+        SendChatAction::new(self, chat_id, action)
     }
 
     #[must_use]

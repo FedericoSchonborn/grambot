@@ -1,4 +1,7 @@
-use std::{fmt::Display, str::FromStr};
+use std::{
+    fmt::{self, Display, Formatter},
+    str::FromStr,
+};
 
 use serde::Serialize;
 
@@ -24,7 +27,7 @@ pub enum AllowedUpdate {
 }
 
 impl Display for AllowedUpdate {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         f.write_str(match self {
             Self::Message => "message",
             Self::EditedMessage => "edited_message",
