@@ -2,9 +2,7 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    methods::types::{ChatId, ParseMode, ReplyMarkup},
-    shared::MessageEntity,
-    types::Message,
+    types::{ChatId, Message, MessageEntity, ParseMode, ReplyMarkup},
     Bot, Error,
 };
 

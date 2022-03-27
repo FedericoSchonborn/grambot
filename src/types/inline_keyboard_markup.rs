@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::shared::InlineKeyboardButton;
+use crate::types::InlineKeyboardButton;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 #[serde(from = "raw::InlineKeyboardMarkup", into = "raw::InlineKeyboardMarkup")]

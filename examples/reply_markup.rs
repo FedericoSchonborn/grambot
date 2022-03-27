@@ -2,7 +2,7 @@ use std::env::var;
 
 use anyhow::Result;
 use grambot::{
-    shared::{KeyboardButton, ReplyKeyboardMarkup},
+    types::{KeyboardButton, ReplyKeyboardMarkup},
     Bot,
 };
 

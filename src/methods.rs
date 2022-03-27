@@ -1,4 +1,4 @@
-//! Method parameters.
+//! Available methods.
 
 mod close;
 mod get_chat;
@@ -6,7 +6,6 @@ mod get_me;
 mod get_updates;
 mod log_out;
 mod send_message;
-pub mod types;
 
 pub use close::*;
 pub use get_chat::*;

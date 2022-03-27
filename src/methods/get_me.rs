@@ -1,7 +1,7 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::{shared::User, Bot, Error};
+use crate::{types::User, Bot, Error};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct GetMe<'bot> {

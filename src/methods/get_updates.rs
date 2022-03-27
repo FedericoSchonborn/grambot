@@ -1,7 +1,10 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::{methods::types::AllowedUpdate, types::Update, Bot, Error};
+use crate::{
+    types::{AllowedUpdate, Update},
+    Bot, Error,
+};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct GetUpdates<'bot> {

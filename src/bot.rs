@@ -1,11 +1,13 @@
+//! Bot API client.
+
 use hyper::{body, client::HttpConnector, Body, Client, Method, Request};
 use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     error::Error,
-    methods::{types::ChatId, Close, GetChat, GetMe, GetUpdates, LogOut, SendMessage},
-    types::Response,
+    methods::{Close, GetChat, GetMe, GetUpdates, LogOut, SendMessage},
+    types::{ChatId, Response},
 };
 
 mod builder;
