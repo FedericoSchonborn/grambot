@@ -73,6 +73,46 @@ pub enum MessageKind {
     // TODO
 }
 
+impl MessageKind {
+    #[must_use]
+    pub fn caption(&self) -> Option<Option<&str>> {
+        match self {
+            Self::Animation { caption, .. }
+            | Self::Audio { caption, .. }
+            | Self::Photo { caption, .. } => Some(caption.as_deref()),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn caption_entities(&self) -> Option<Option<&[MessageEntity]>> {
+        match self {
+            Self::Animation {
+                caption_entities, ..
+            }
+            | Self::Audio {
+                caption_entities, ..
+            }
+            | Self::Photo {
+                caption_entities, ..
+            } => Some(caption_entities.as_deref()),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn reply_markup(&self) -> Option<Option<&InlineKeyboardMarkup>> {
+        match self {
+            Self::Text { reply_markup, .. }
+            | Self::Animation { reply_markup, .. }
+            | Self::Audio { reply_markup, .. }
+            | Self::Photo { reply_markup, .. }
+            | Self::Dice { reply_markup, .. } => Some(reply_markup.as_ref()),
+            _ => None,
+        }
+    }
+}
+
 mod raw {
     use crate::types::Animation;
 
