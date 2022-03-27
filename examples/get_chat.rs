@@ -9,6 +9,7 @@ async fn main() -> Result<()> {
     println!(
         "{:#?}",
         bot.get_chat(var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?)
+            .send()
             .await?
     );
 

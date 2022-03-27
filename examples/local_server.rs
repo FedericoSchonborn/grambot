@@ -9,7 +9,7 @@ async fn main() -> Result<()> {
     let bot = Bot::builder()
         .server(var("GRAMBOT_EXAMPLE_LOCAL_SERVER")?)
         .build(var("GRAMBOT_EXAMPLE_TOKEN")?);
-    println!("{:#?}", bot.get_me().await);
+    println!("{:#?}", bot.get_me().send().await);
 
     Ok(())
 }

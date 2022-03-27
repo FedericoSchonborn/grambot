@@ -4,13 +4,8 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     error::Error,
-    methods::{
-        builders::{GetUpdatesBuilder, SendMessageBuilder},
-        types::ChatId,
-        GetChat, GetUpdates, SendMessage,
-    },
-    shared::User,
-    types::{Chat, Message, Response, Update},
+    methods::{types::ChatId, Close, GetChat, GetMe, GetUpdates, LogOut, SendMessage},
+    types::Response,
 };
 
 mod builder;
@@ -42,7 +37,12 @@ impl Bot {
         Builder::new()
     }
 
-    async fn request<P, T>(&self, method: Method, endpoint: &str, params: P) -> Result<T, Error>
+    pub(crate) async fn request<P, T>(
+        &self,
+        method: Method,
+        endpoint: &str,
+        params: P,
+    ) -> Result<T, Error>
     where
         P: Serialize,
         T: DeserializeOwned,
@@ -67,55 +67,40 @@ impl Bot {
         }
     }
 
-    #[allow(clippy::missing_errors_doc)]
-    pub async fn get_updates(&self, params: GetUpdates) -> Result<Vec<Update>, Error> {
-        self.request(Method::GET, "getUpdates", params).await
+    #[must_use]
+    pub fn get_updates(&self) -> GetUpdates<'_> {
+        GetUpdates::new(self)
     }
 
     #[must_use]
-    pub fn new_get_updates(&self) -> GetUpdatesBuilder<'_> {
-        GetUpdatesBuilder::new(self)
-    }
-
-    #[allow(clippy::missing_errors_doc)]
-    pub async fn get_me(&self) -> Result<User, Error> {
-        self.request(Method::GET, "getMe", ()).await
-    }
-
-    #[allow(clippy::missing_errors_doc)]
-    pub async fn log_out(&self) -> Result<(), Error> {
-        self.request::<_, bool>(Method::POST, "logOut", ())
-            .await
-            .map(|_| ())
-    }
-
-    #[allow(clippy::missing_errors_doc)]
-    pub async fn close(&self) -> Result<(), Error> {
-        self.request::<_, bool>(Method::POST, "close", ())
-            .await
-            .map(|_| ())
-    }
-
-    #[allow(clippy::missing_errors_doc)]
-    pub async fn send_message(&self, params: SendMessage) -> Result<Message, Error> {
-        self.request(Method::POST, "sendMessage", params).await
+    pub fn get_me(&self) -> GetMe<'_> {
+        GetMe::new(self)
     }
 
     #[must_use]
-    pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessageBuilder<'_>
+    pub fn log_out(&self) -> LogOut<'_> {
+        LogOut::new(self)
+    }
+
+    #[must_use]
+    pub fn close(&self) -> Close<'_> {
+        Close::new(self)
+    }
+
+    #[must_use]
+    pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessage<'_>
     where
         C: Into<ChatId>,
         T: Into<String>,
     {
-        SendMessageBuilder::new(self, chat_id, text)
+        SendMessage::new(self, chat_id, text)
     }
 
-    #[allow(clippy::missing_errors_doc)]
-    pub async fn get_chat<C>(&self, chat_id: C) -> Result<Chat, Error>
+    #[must_use]
+    pub fn get_chat<C>(&self, chat_id: C) -> GetChat<'_>
     where
         C: Into<ChatId>,
     {
-        self.request(Method::GET, "getChat", GetChat::new(chat_id))
-            .await
+        GetChat::new(self, chat_id)
     }
 }

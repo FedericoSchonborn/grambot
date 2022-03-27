@@ -1,32 +1,28 @@
+use hyper::Method;
 use serde::Serialize;
 
-use crate::methods::types::ChatId;
+use crate::{methods::types::ChatId, types::Chat, Bot, Error};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
-#[serde(into = "raw::GetChat")]
-pub struct GetChat(pub ChatId);
+#[derive(Debug, Clone, Serialize)]
+pub struct GetChat<'bot> {
+    #[serde(skip)]
+    bot: &'bot Bot,
+    chat_id: ChatId,
+}
 
-impl GetChat {
-    pub fn new<C>(chat_id: C) -> Self
+impl<'bot> GetChat<'bot> {
+    pub fn new<C>(bot: &'bot Bot, chat_id: C) -> Self
     where
         C: Into<ChatId>,
     {
-        Self(chat_id.into())
-    }
-}
-
-mod raw {
-    #[allow(clippy::wildcard_imports)]
-    use super::*;
-
-    #[derive(Serialize)]
-    pub struct GetChat {
-        chat_id: ChatId,
-    }
-
-    impl From<super::GetChat> for GetChat {
-        fn from(it: super::GetChat) -> Self {
-            Self { chat_id: it.0 }
+        Self {
+            bot,
+            chat_id: chat_id.into(),
         }
+    }
+
+    #[allow(clippy::missing_errors_doc)]
+    pub async fn send(self) -> Result<Chat, Error> {
+        self.bot.request(Method::GET, "getChat", self).await
     }
 }
