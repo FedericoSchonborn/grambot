@@ -1,4 +1,5 @@
 #![warn(clippy::pedantic, clippy::cargo)]
+#![allow(clippy::multiple_crate_versions)]
 
 pub mod bot;
 mod error;

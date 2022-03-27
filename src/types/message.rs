@@ -30,6 +30,53 @@ pub struct Message {
     pub kind: MessageKind,
 }
 
+impl Message {
+    #[must_use]
+    pub fn text(&self) -> Option<&str> {
+        self.kind.text()
+    }
+
+    #[must_use]
+    pub fn animation(&self) -> Option<&Animation> {
+        self.kind.animation()
+    }
+
+    #[must_use]
+    pub fn audio(&self) -> Option<&Audio> {
+        self.kind.audio()
+    }
+
+    #[must_use]
+    pub fn photo(&self) -> Option<&[PhotoSize]> {
+        self.kind.photo()
+    }
+
+    #[must_use]
+    pub fn dice(&self) -> Option<&Dice> {
+        self.kind.dice()
+    }
+
+    #[must_use]
+    pub fn entities(&self) -> Option<&[MessageEntity]> {
+        self.kind.entities()
+    }
+
+    #[must_use]
+    pub fn caption(&self) -> Option<&str> {
+        self.kind.caption()
+    }
+
+    #[must_use]
+    pub fn caption_entities(&self) -> Option<&[MessageEntity]> {
+        self.kind.caption_entities()
+    }
+
+    #[must_use]
+    pub fn reply_markup(&self) -> Option<&InlineKeyboardMarkup> {
+        self.kind.reply_markup()
+    }
+}
+
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum MessageKind {
@@ -75,17 +122,65 @@ pub enum MessageKind {
 
 impl MessageKind {
     #[must_use]
-    pub fn caption(&self) -> Option<Option<&str>> {
+    pub fn text(&self) -> Option<&str> {
         match self {
-            Self::Animation { caption, .. }
-            | Self::Audio { caption, .. }
-            | Self::Photo { caption, .. } => Some(caption.as_deref()),
+            Self::Text { text, .. } => Some(text),
             _ => None,
         }
     }
 
     #[must_use]
-    pub fn caption_entities(&self) -> Option<Option<&[MessageEntity]>> {
+    pub fn animation(&self) -> Option<&Animation> {
+        match self {
+            Self::Animation { animation, .. } => Some(animation),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn audio(&self) -> Option<&Audio> {
+        match self {
+            Self::Audio { audio, .. } => Some(audio),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn photo(&self) -> Option<&[PhotoSize]> {
+        match self {
+            Self::Photo { photo, .. } => Some(photo),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn dice(&self) -> Option<&Dice> {
+        match self {
+            Self::Dice { dice, .. } => Some(dice),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn entities(&self) -> Option<&[MessageEntity]> {
+        match self {
+            Self::Text { entities, .. } => entities.as_deref(),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn caption(&self) -> Option<&str> {
+        match self {
+            Self::Animation { caption, .. }
+            | Self::Audio { caption, .. }
+            | Self::Photo { caption, .. } => caption.as_deref(),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn caption_entities(&self) -> Option<&[MessageEntity]> {
         match self {
             Self::Animation {
                 caption_entities, ..
@@ -95,19 +190,19 @@ impl MessageKind {
             }
             | Self::Photo {
                 caption_entities, ..
-            } => Some(caption_entities.as_deref()),
+            } => caption_entities.as_deref(),
             _ => None,
         }
     }
 
     #[must_use]
-    pub fn reply_markup(&self) -> Option<Option<&InlineKeyboardMarkup>> {
+    pub fn reply_markup(&self) -> Option<&InlineKeyboardMarkup> {
         match self {
             Self::Text { reply_markup, .. }
             | Self::Animation { reply_markup, .. }
             | Self::Audio { reply_markup, .. }
             | Self::Photo { reply_markup, .. }
-            | Self::Dice { reply_markup, .. } => Some(reply_markup.as_ref()),
+            | Self::Dice { reply_markup, .. } => reply_markup.as_ref(),
             _ => None,
         }
     }

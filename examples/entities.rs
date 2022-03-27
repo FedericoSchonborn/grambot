@@ -15,7 +15,7 @@ async fn main() -> Result<()> {
         .disable_notification(true)
         .send()
         .await?;
-    println!("{:#?}", message.entities);
+    println!("{:#?}", message.entities());
 
     Ok(())
 }
