@@ -3,7 +3,9 @@
 use serde::Deserialize;
 
 mod allowed_update;
+mod chat;
 mod chat_id;
+mod dice;
 pub mod error;
 mod force_reply;
 mod inline_keyboard_button;
@@ -20,7 +22,9 @@ mod update;
 mod user;
 
 pub use allowed_update::*;
+pub use chat::*;
 pub use chat_id::*;
+pub use dice::*;
 pub use force_reply::*;
 pub use inline_keyboard_button::*;
 pub use inline_keyboard_markup::*;
@@ -39,33 +43,6 @@ pub use user::*;
 pub struct ResponseParameters {
     pub migrate_to_chat_id: i64,
     pub retry_after: i32,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[allow(clippy::module_name_repetitions)]
-pub enum UpdateKind {
-    Message(Message),
-    EditedMessage(Message),
-    ChannelPost(Message),
-    EditedChannelPost(Message),
-    // TODO
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
-pub struct Chat {
-    pub id: i64,
-    #[serde(rename = "type")]
-    pub kind: ChatKind,
-    // TODO
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum ChatKind {
-    Private,
-    Group,
-    Supergroup,
-    Channel,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
@@ -90,5 +67,7 @@ pub struct Message {
     pub author_signature: Option<String>,
     pub text: Option<String>,
     pub entities: Option<Vec<MessageEntity>>,
+    // TODO
+    pub dice: Option<Dice>,
     // TODO
 }

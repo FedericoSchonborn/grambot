@@ -1,12 +1,22 @@
 use serde::Deserialize;
 
-use crate::types::{Message, UpdateKind};
+use crate::types::Message;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 #[serde(from = "raw::Update")]
 pub struct Update {
     pub id: i32,
     pub kind: UpdateKind,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[allow(clippy::module_name_repetitions)]
+pub enum UpdateKind {
+    Message(Message),
+    EditedMessage(Message),
+    ChannelPost(Message),
+    EditedChannelPost(Message),
+    // TODO
 }
 
 mod raw {

@@ -7,5 +7,10 @@ pub struct TryFromAllowedUpdateError;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Error)]
+#[error("expected one of `🎲`, `🎯`, `🎳`, `🏀`, `⚽`, `🎰`")]
+pub struct TryFromDiceError;
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Debug, Error)]
 #[error("expected one of `HTML`, `Markdown`, `MarkdownV2`")]
 pub struct TryFromParseModeError;
