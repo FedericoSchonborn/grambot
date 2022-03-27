@@ -8,7 +8,18 @@ pub struct User {
     pub last_name: Option<String>,
     pub username: Option<String>,
     pub language_code: Option<String>,
-    pub can_join_groups: Option<bool>,
-    pub can_read_all_group_messages: Option<bool>,
-    pub supports_inline_queries: Option<bool>,
+}
+
+#[allow(clippy::module_name_repetitions, clippy::struct_excessive_bools)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+pub struct BotUser {
+    pub id: i64,
+    pub is_bot: bool,
+    pub first_name: String,
+    pub last_name: Option<String>,
+    pub username: Option<String>,
+    pub language_code: Option<String>,
+    pub can_join_groups: bool,
+    pub can_read_all_group_messages: bool,
+    pub supports_inline_queries: bool,
 }

@@ -1,7 +1,7 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::{types::User, Bot, Error};
+use crate::{types::BotUser, Bot, Error};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct GetMe<'bot> {
@@ -16,7 +16,7 @@ impl<'bot> GetMe<'bot> {
     }
 
     #[allow(clippy::missing_errors_doc)]
-    pub async fn send(self) -> Result<User, Error> {
+    pub async fn send(self) -> Result<BotUser, Error> {
         self.bot.request(Method::GET, "getMe", self).await
     }
 }
