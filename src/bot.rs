@@ -6,7 +6,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
     error::Error,
-    methods::{Close, GetChat, GetMe, GetUpdates, LogOut, SendMessage},
+    methods::{Close, ForwardMessage, GetChat, GetMe, GetUpdates, LogOut, SendMessage},
     types::{ChatId, Response},
 };
 
@@ -96,6 +96,20 @@ impl Bot {
         T: Into<String>,
     {
         SendMessage::new(self, chat_id, text)
+    }
+
+    #[must_use]
+    pub fn forward_message<C, F>(
+        &self,
+        chat_id: C,
+        from_chat_id: F,
+        message_id: i32,
+    ) -> ForwardMessage<'_>
+    where
+        C: Into<ChatId>,
+        F: Into<ChatId>,
+    {
+        ForwardMessage::new(self, chat_id, from_chat_id, message_id)
     }
 
     #[must_use]
