@@ -1,5 +1,6 @@
 //! Available types.
 
+use chrono::NaiveDateTime;
 use serde::Deserialize;
 
 mod allowed_update;
@@ -49,25 +50,36 @@ pub struct ResponseParameters {
 pub struct Message {
     pub message_id: i32,
     pub from: Option<User>,
-    // TODO: sender_chat
-    // TODO: date
+    pub sender_chat: Option<Chat>,
+    #[serde(with = "chrono::naive::serde::ts_seconds")]
+    pub date: NaiveDateTime,
     pub chat: Chat,
     pub forward_from: Option<User>,
-    // TODO: forward_from_chat
+    pub forward_from_chat: Option<Chat>,
     pub forward_from_message_id: Option<i32>,
     pub forward_signature: Option<String>,
     pub forward_sender_name: Option<String>,
-    // TODO: forward_date
+    #[serde(with = "chrono::naive::serde::ts_seconds")]
+    pub forward_date: NaiveDateTime,
     pub is_automatic_forward: Option<bool>,
     pub reply_to_message: Option<Box<Message>>,
     pub via_bot: Option<User>,
-    // TODO: edit_date
+    #[serde(with = "chrono::naive::serde::ts_seconds")]
+    pub edit_date: NaiveDateTime,
     pub has_protected_content: Option<bool>,
     pub media_group_id: Option<String>,
     pub author_signature: Option<String>,
     pub text: Option<String>,
     pub entities: Option<Vec<MessageEntity>>,
-    // TODO
+    // TODO: Media messages.
+    pub caption: Option<String>,
+    pub caption_entities: Option<Vec<MessageEntity>>,
     pub dice: Option<Dice>,
-    // TODO
+    pub new_chat_members: Option<Vec<User>>,
+    pub left_chat_member: Option<User>,
+    // TODO: Service messages.
+    pub migrate_to_chat_id: Option<i64>,
+    pub pinned_message: Option<Box<Message>>,
+    // TODO: Media messages.
+    pub reply_markup: Option<InlineKeyboardMarkup>,
 }
