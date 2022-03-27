@@ -27,7 +27,13 @@ pub enum DiceEmoji {
     #[serde(rename = "⚽")]
     Football,
     #[serde(rename = "🎰")]
-    Slots,
+    SlotMachine,
+}
+
+impl Default for DiceEmoji {
+    fn default() -> Self {
+        Self::Dice
+    }
 }
 
 impl Display for DiceEmoji {
@@ -38,7 +44,7 @@ impl Display for DiceEmoji {
             Self::Bowling => '🎳',
             Self::Basketball => '🏀',
             Self::Football => '⚽',
-            Self::Slots => '🎰',
+            Self::SlotMachine => '🎰',
         })
     }
 }
@@ -53,7 +59,7 @@ impl FromStr for DiceEmoji {
             "🎳" => Ok(Self::Bowling),
             "🏀" => Ok(Self::Basketball),
             "⚽" => Ok(Self::Football),
-            "🎰" => Ok(Self::Slots),
+            "🎰" => Ok(Self::SlotMachine),
             _ => Err(TryFromDiceKindError),
         }
     }
@@ -69,7 +75,7 @@ impl TryFrom<char> for DiceEmoji {
             '🎳' => Ok(Self::Bowling),
             '🏀' => Ok(Self::Basketball),
             '⚽' => Ok(Self::Football),
-            '🎰' => Ok(Self::Slots),
+            '🎰' => Ok(Self::SlotMachine),
             _ => Err(TryFromDiceKindError),
         }
     }
