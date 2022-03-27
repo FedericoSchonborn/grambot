@@ -38,14 +38,17 @@ mod raw {
             Self {
                 id: raw.update_id,
                 kind: {
+                    #[allow(clippy::enum_glob_use)]
+                    use UpdateKind::*;
+
                     if let Some(message) = raw.message {
-                        UpdateKind::Message(message)
+                        Message(message)
                     } else if let Some(edited_message) = raw.edited_message {
-                        UpdateKind::EditedMessage(edited_message)
+                        EditedMessage(edited_message)
                     } else if let Some(channel_post) = raw.channel_post {
-                        UpdateKind::ChannelPost(channel_post)
+                        ChannelPost(channel_post)
                     } else if let Some(edited_channel_post) = raw.edited_channel_post {
-                        UpdateKind::EditedChannelPost(edited_channel_post)
+                        EditedChannelPost(edited_channel_post)
                     } else {
                         todo!()
                     }
