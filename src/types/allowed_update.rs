@@ -2,7 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use serde::Serialize;
 
-use crate::types::error::TryFromAllowedUpdateError;
+use crate::types::errors::TryFromAllowedUpdateError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]

@@ -5,7 +5,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::types::error::TryFromDiceError;
+use crate::types::errors::TryFromDiceKindError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct Dice {
@@ -44,7 +44,7 @@ impl Display for DiceEmoji {
 }
 
 impl FromStr for DiceEmoji {
-    type Err = TryFromDiceError;
+    type Err = TryFromDiceKindError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -54,13 +54,13 @@ impl FromStr for DiceEmoji {
             "🏀" => Ok(Self::Basketball),
             "⚽" => Ok(Self::Football),
             "🎰" => Ok(Self::Slots),
-            _ => Err(TryFromDiceError),
+            _ => Err(TryFromDiceKindError),
         }
     }
 }
 
 impl TryFrom<char> for DiceEmoji {
-    type Error = TryFromDiceError;
+    type Error = TryFromDiceKindError;
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
         match value {
@@ -70,7 +70,7 @@ impl TryFrom<char> for DiceEmoji {
             '🏀' => Ok(Self::Basketball),
             '⚽' => Ok(Self::Football),
             '🎰' => Ok(Self::Slots),
-            _ => Err(TryFromDiceError),
+            _ => Err(TryFromDiceKindError),
         }
     }
 }

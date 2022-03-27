@@ -7,8 +7,13 @@ pub struct TryFromAllowedUpdateError;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Error)]
+#[error("expected one of `private`, `group`, `supergroup`, `channel`")]
+pub struct TryFromChatKindError;
+
+#[allow(clippy::module_name_repetitions)]
+#[derive(Debug, Error)]
 #[error("expected one of `🎲`, `🎯`, `🎳`, `🏀`, `⚽`, `🎰`")]
-pub struct TryFromDiceError;
+pub struct TryFromDiceKindError;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Error)]

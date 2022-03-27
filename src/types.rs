@@ -6,7 +6,7 @@ mod allowed_update;
 mod chat;
 mod chat_id;
 mod dice;
-pub mod error;
+pub mod errors;
 mod force_reply;
 mod inline_keyboard_button;
 mod inline_keyboard_markup;

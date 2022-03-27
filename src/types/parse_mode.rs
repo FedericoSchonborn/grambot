@@ -5,7 +5,7 @@ use std::{
 
 use serde::Serialize;
 
-use crate::types::error::TryFromParseModeError;
+use crate::types::errors::TryFromParseModeError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub enum ParseMode {
