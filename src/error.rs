@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use crate::types::ResponseError;
+use crate::types::ResponseParameters;
 
 /// Compound error type.
 #[derive(Debug, Error)]
@@ -11,6 +11,10 @@ pub enum Error {
     Hyper(#[from] hyper::Error),
     #[error(transparent)]
     Json(#[from] serde_json::Error),
-    #[error(transparent)]
-    Response(#[from] ResponseError),
+    #[error("{description}")]
+    Response {
+        description: String,
+        error_code: Option<i32>,
+        parameters: Option<ResponseParameters>,
+    },
 }

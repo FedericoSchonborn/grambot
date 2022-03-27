@@ -65,7 +65,7 @@ impl Bot {
         let response: Response<T> = serde_json::from_slice(&bytes)?;
         match response {
             Response::Ok(result) => Ok(result),
-            Response::Err(err) => Err(Error::Response(err)),
+            Response::Err(err) => Err(err),
         }
     }
 

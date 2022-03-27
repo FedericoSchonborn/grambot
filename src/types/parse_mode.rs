@@ -4,7 +4,8 @@ use std::{
 };
 
 use serde::Serialize;
-use thiserror::Error;
+
+use crate::types::error::TryFromParseModeError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub enum ParseMode {
@@ -23,10 +24,6 @@ impl Display for ParseMode {
         })
     }
 }
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
-#[error("expected one of `HTML`, `Markdown`, `MarkdownV2`")]
-pub struct TryFromParseModeError;
 
 impl FromStr for ParseMode {
     type Err = TryFromParseModeError;

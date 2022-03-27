@@ -1,12 +1,12 @@
 use serde::Deserialize;
 
-use crate::types::{ResponseError, ResponseParameters};
+use crate::{types::ResponseParameters, Error};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[derive(Debug, Deserialize)]
 #[serde(from = "raw::Response<T>")]
 pub enum Response<T> {
     Ok(T),
-    Err(ResponseError),
+    Err(Error),
 }
 
 mod raw {
@@ -27,7 +27,7 @@ mod raw {
             if raw.ok {
                 Self::Ok(raw.result.expect("missing result field in `Ok` response"))
             } else {
-                Self::Err(ResponseError {
+                Self::Err(Error::Response {
                     description: raw
                         .description
                         .expect("missing description field in `Err` response"),

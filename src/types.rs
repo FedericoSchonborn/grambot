@@ -1,10 +1,10 @@
 //! Available types.
 
 use serde::Deserialize;
-use thiserror::Error;
 
 mod allowed_update;
 mod chat_id;
+pub mod error;
 mod force_reply;
 mod inline_keyboard_button;
 mod inline_keyboard_markup;
@@ -34,33 +34,6 @@ pub use reply_markup::*;
 pub use response::*;
 pub use update::*;
 pub use user::*;
-
-/// Error type for errors thrown by the API.
-#[allow(clippy::module_name_repetitions)]
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Error)]
-#[error("{description}")]
-pub struct ResponseError {
-    description: String,
-    error_code: Option<i32>,
-    parameters: Option<ResponseParameters>,
-}
-
-impl ResponseError {
-    #[must_use]
-    pub fn description(&self) -> &str {
-        &self.description
-    }
-
-    #[must_use]
-    pub fn error_code(&self) -> Option<i32> {
-        self.error_code
-    }
-
-    #[must_use]
-    pub fn parameters(&self) -> Option<ResponseParameters> {
-        self.parameters
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct ResponseParameters {

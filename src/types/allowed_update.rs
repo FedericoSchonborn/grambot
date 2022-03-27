@@ -1,7 +1,8 @@
 use std::{fmt::Display, str::FromStr};
 
 use serde::Serialize;
-use thiserror::Error;
+
+use crate::types::error::TryFromAllowedUpdateError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -42,10 +43,6 @@ impl Display for AllowedUpdate {
         })
     }
 }
-
-#[derive(Debug, Error)]
-#[error("expected one of `message`, `edited_message`, `channel_post`, `edited_channel_post`, `inline_query`, `chosen_inline_result`, `callback_query`, `shipping_query`, `pre_checkout_query`, `poll`, `poll_answer`, `my_chat_member`, `chat_member`, `can_join_request`")]
-pub struct TryFromAllowedUpdateError;
 
 impl FromStr for AllowedUpdate {
     type Err = TryFromAllowedUpdateError;
