@@ -77,7 +77,6 @@ impl Message {
     }
 }
 
-#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum MessageKind {
     Text {
@@ -211,7 +210,6 @@ impl MessageKind {
 mod raw {
     use crate::types::Animation;
 
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize)]

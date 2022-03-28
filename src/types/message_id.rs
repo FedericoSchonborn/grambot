@@ -5,7 +5,6 @@ use serde::Deserialize;
 pub struct MessageId(pub i32);
 
 mod raw {
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize)]

@@ -10,7 +10,6 @@ pub enum Response<T> {
 }
 
 mod raw {
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize)]

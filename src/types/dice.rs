@@ -13,7 +13,6 @@ pub struct Dice {
     pub value: i8,
 }
 
-#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 pub enum DiceEmoji {
     #[serde(rename = "🎲")]

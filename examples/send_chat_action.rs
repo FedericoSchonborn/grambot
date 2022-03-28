@@ -8,9 +8,7 @@ async fn main() -> Result<()> {
     let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
     let chat_id = var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?;
 
-    bot.new_chat_action(chat_id, ChatAction::Typing)
-        .send()
-        .await?;
+    bot.send_chat_action(chat_id, ChatAction::Typing).await?;
     let message = bot
         .new_message(chat_id, "Hi!")
         .disable_notification(true)

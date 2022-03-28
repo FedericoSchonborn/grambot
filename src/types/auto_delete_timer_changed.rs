@@ -5,7 +5,6 @@ use serde::Deserialize;
 pub struct AutoDeleteTimerChanged(pub i32);
 
 mod raw {
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize)]

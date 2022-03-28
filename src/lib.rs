@@ -1,7 +1,15 @@
 #![warn(clippy::pedantic, clippy::cargo)]
-#![allow(clippy::multiple_crate_versions)]
+// Remove these when documentation is done.
+#![allow(clippy::missing_errors_doc)]
+// Do NOT remove these.
+#![allow(
+    clippy::module_name_repetitions,
+    clippy::multiple_crate_versions,
+    clippy::wildcard_imports
+)]
 
 pub mod bot;
+pub mod builders;
 mod error;
 pub mod methods;
 pub mod types;

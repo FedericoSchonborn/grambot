@@ -10,7 +10,6 @@ pub struct MessageEntity {
     pub length: i32,
 }
 
-#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum MessageEntityKind {

@@ -16,7 +16,6 @@ impl ReplyKeyboardRemove {
 }
 
 mod raw {
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize, Serialize)]

@@ -10,7 +10,6 @@ pub struct Update {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[allow(clippy::module_name_repetitions)]
 pub enum UpdateKind {
     Message(Message),
     EditedMessage(Message),
@@ -20,7 +19,6 @@ pub enum UpdateKind {
 }
 
 mod raw {
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize)]

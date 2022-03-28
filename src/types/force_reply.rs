@@ -15,7 +15,6 @@ impl ForceReply {
 }
 
 mod raw {
-    #[allow(clippy::wildcard_imports)]
     use super::*;
 
     #[derive(Deserialize, Serialize)]

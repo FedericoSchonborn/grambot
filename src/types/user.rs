@@ -13,7 +13,7 @@ pub struct User {
     pub language_code: Option<String>,
 }
 
-#[allow(clippy::module_name_repetitions, clippy::struct_excessive_bools)]
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct BotUser {
     pub id: i64,

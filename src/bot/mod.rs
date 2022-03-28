@@ -5,12 +5,10 @@ use hyper_tls::HttpsConnector;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
+    builders::{ForwardMessageBuilder, GetUpdatesBuilder, SendDiceBuilder, SendMessageBuilder},
     error::Error,
-    methods::{
-        Close, ForwardMessage, GetChat, GetMe, GetUpdates, LogOut, SendChatAction, SendDice,
-        SendMessage,
-    },
-    types::{ChatAction, ChatId, Response},
+    methods::{GetChat, SendChatAction},
+    types::{BotUser, Chat, ChatAction, ChatId, Response},
 };
 
 mod builder;
@@ -52,7 +50,8 @@ impl Bot {
         P: Serialize,
         T: DeserializeOwned,
     {
-        let content = serde_json::to_string(&params)?;
+        let content = serde_json::to_vec(&params)?;
+        let body = Body::from(content);
         let request = Request::builder()
             .method(method)
             .uri(format!(
@@ -61,7 +60,7 @@ impl Bot {
                 token = self.token,
             ))
             .header("Content-Type", "application/json")
-            .body(Body::from(content))?;
+            .body(body)?;
 
         let body = self.client.request(request).await?.into_body();
         let bytes = body::to_bytes(body).await?;
@@ -73,32 +72,33 @@ impl Bot {
     }
 
     #[must_use]
-    pub fn get_updates(&self) -> GetUpdates<'_> {
-        GetUpdates::new(self)
+    pub fn get_updates(&self) -> GetUpdatesBuilder<'_> {
+        GetUpdatesBuilder::new(self)
+    }
+
+    pub async fn get_me(&self) -> Result<BotUser, Error> {
+        self.request(Method::GET, "getMe", ()).await
+    }
+
+    pub async fn log_out(&self) -> Result<(), Error> {
+        self.request::<_, bool>(Method::POST, "logOut", ())
+            .await
+            .map(|_| ())
+    }
+
+    pub async fn close(&self) -> Result<(), Error> {
+        self.request::<_, bool>(Method::POST, "close", ())
+            .await
+            .map(|_| ())
     }
 
     #[must_use]
-    pub fn get_me(&self) -> GetMe<'_> {
-        GetMe::new(self)
-    }
-
-    #[must_use]
-    pub fn log_out(&self) -> LogOut<'_> {
-        LogOut::new(self)
-    }
-
-    #[must_use]
-    pub fn close(&self) -> Close<'_> {
-        Close::new(self)
-    }
-
-    #[must_use]
-    pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessage<'_>
+    pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessageBuilder<'_>
     where
         C: Into<ChatId>,
         T: Into<String>,
     {
-        SendMessage::new(self, chat_id, text)
+        SendMessageBuilder::new(self, chat_id, text)
     }
 
     #[must_use]
@@ -107,35 +107,40 @@ impl Bot {
         chat_id: C,
         from_chat_id: F,
         message_id: i32,
-    ) -> ForwardMessage<'_>
+    ) -> ForwardMessageBuilder<'_>
     where
         C: Into<ChatId>,
         F: Into<ChatId>,
     {
-        ForwardMessage::new(self, chat_id, from_chat_id, message_id)
+        ForwardMessageBuilder::new(self, chat_id, from_chat_id, message_id)
     }
 
     #[must_use]
-    pub fn new_dice<C>(&self, chat_id: C) -> SendDice<'_>
+    pub fn new_dice<C>(&self, chat_id: C) -> SendDiceBuilder<'_>
     where
         C: Into<ChatId>,
     {
-        SendDice::new(self, chat_id)
+        SendDiceBuilder::new(self, chat_id)
     }
 
-    #[must_use]
-    pub fn new_chat_action<C>(&self, chat_id: C, action: ChatAction) -> SendChatAction<'_>
+    pub async fn send_chat_action<C>(&self, chat_id: C, action: ChatAction) -> Result<(), Error>
     where
         C: Into<ChatId>,
     {
-        SendChatAction::new(self, chat_id, action)
+        self.request::<_, bool>(
+            Method::POST,
+            "sendChatAction",
+            SendChatAction::new(chat_id, action),
+        )
+        .await
+        .map(|_| ())
     }
 
-    #[must_use]
-    pub fn get_chat<C>(&self, chat_id: C) -> GetChat<'_>
+    pub async fn get_chat<C>(&self, chat_id: C) -> Result<Chat, Error>
     where
         C: Into<ChatId>,
     {
-        GetChat::new(self, chat_id)
+        self.request(Method::GET, "getChat", GetChat::new(chat_id))
+            .await
     }
 }
