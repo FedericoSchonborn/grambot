@@ -1,10 +1,3 @@
-# Grambot
-
-Telegram Bot API library for Rust.
-
-## Example
-
-```rust
 use anyhow::Result;
 use grambot::{
     methods::{GetMe, GetUpdates},
@@ -21,4 +14,3 @@ async fn main() -> Result<()> {
 
     Ok(())
 }
-```
