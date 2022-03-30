@@ -1,4 +1,4 @@
-//! Builders for available methods.
+//! Builders for methods that contain optional parameters.
 
 mod forward_message;
 mod get_updates;

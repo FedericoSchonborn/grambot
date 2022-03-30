@@ -9,6 +9,13 @@ pub struct Update {
     pub kind: UpdateKind,
 }
 
+impl Update {
+    #[must_use]
+    pub fn message(&self) -> Option<&Message> {
+        self.kind.message()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum UpdateKind {
     Message(Message),
@@ -16,6 +23,19 @@ pub enum UpdateKind {
     ChannelPost(Message),
     EditedChannelPost(Message),
     // TODO
+}
+
+impl UpdateKind {
+    #[must_use]
+    pub fn message(&self) -> Option<&Message> {
+        match self {
+            Self::Message(message)
+            | Self::EditedMessage(message)
+            | Self::ChannelPost(message)
+            | Self::EditedChannelPost(message) => Some(message),
+            _ => None,
+        }
+    }
 }
 
 mod raw {
