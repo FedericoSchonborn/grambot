@@ -2,8 +2,8 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    builders::ForwardMessageBuilder,
-    traits::Request,
+    methods::builders::ForwardMessageBuilder,
+    methods::Request,
     types::{ChatId, Message},
 };
 

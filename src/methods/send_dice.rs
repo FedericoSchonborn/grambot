@@ -2,8 +2,8 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    builders::SendDiceBuilder,
-    traits::Request,
+    methods::builders::SendDiceBuilder,
+    methods::Request,
     types::{ChatId, DiceEmoji, Message, ReplyMarkup},
 };
 

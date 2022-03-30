@@ -1,7 +1,7 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::{traits::Request, types::User};
+use crate::{methods::Request, types::User};
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct GetMe;

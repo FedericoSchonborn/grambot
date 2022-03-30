@@ -9,10 +9,8 @@
 )]
 
 pub mod bot;
-pub mod builders;
 mod error;
 pub mod methods;
-pub mod traits;
 pub mod types;
 
 #[doc(inline)]

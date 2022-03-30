@@ -2,7 +2,7 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    traits::Request,
+    methods::Request,
     types::{ChatAction, ChatId},
 };
 

@@ -4,7 +4,7 @@ use hyper::{body, client::HttpConnector, Body, Client};
 use hyper_tls::HttpsConnector;
 use serde::Deserialize;
 
-use crate::{error::Error, traits::Request, types::ResponseParameters};
+use crate::{error::Error, methods::Request, types::ResponseParameters};
 
 mod builder;
 pub use builder::*;

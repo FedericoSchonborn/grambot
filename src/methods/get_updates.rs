@@ -2,8 +2,8 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    builders::GetUpdatesBuilder,
-    traits::Request,
+    methods::builders::GetUpdatesBuilder,
+    methods::Request,
     types::{AllowedUpdate, Update},
 };
 

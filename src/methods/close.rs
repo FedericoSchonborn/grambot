@@ -1,7 +1,7 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::traits::Request;
+use crate::methods::Request;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct Close;

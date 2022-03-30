@@ -1,7 +1,7 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::{traits::Request, types::ChatId};
+use crate::{methods::Request, types::ChatId};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct GetChat(#[serde(rename = "chat_id")] pub ChatId);
