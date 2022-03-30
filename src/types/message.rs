@@ -2,8 +2,8 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 use crate::types::{
-    Animation, Audio, AutoDeleteTimerChanged, Chat, Dice, InlineKeyboardMarkup, MessageEntity,
-    PhotoSize, User,
+    Animation, Audio, AutoDeleteTimerChanged, Chat, Dice, Document, InlineKeyboardMarkup,
+    MessageEntity, PhotoSize, User,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
@@ -27,6 +27,7 @@ pub struct Message {
     pub has_protected_content: Option<bool>,
     pub media_group_id: Option<String>,
     pub author_signature: Option<String>,
+    pub reply_markup: Option<InlineKeyboardMarkup>,
     pub kind: MessageKind,
 }
 
@@ -70,41 +71,38 @@ impl Message {
     pub fn caption_entities(&self) -> Option<&[MessageEntity]> {
         self.kind.caption_entities()
     }
-
-    #[must_use]
-    pub fn reply_markup(&self) -> Option<&InlineKeyboardMarkup> {
-        self.kind.reply_markup()
-    }
 }
 
+// Reference: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1606
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum MessageKind {
     Text {
         text: String,
         entities: Option<Vec<MessageEntity>>,
-        reply_markup: Option<InlineKeyboardMarkup>,
     },
     Animation {
         animation: Animation,
+        document: Document,
         caption: Option<String>,
         caption_entities: Option<Vec<MessageEntity>>,
-        reply_markup: Option<InlineKeyboardMarkup>,
     },
     Audio {
         audio: Audio,
         caption: Option<String>,
         caption_entities: Option<Vec<MessageEntity>>,
-        reply_markup: Option<InlineKeyboardMarkup>,
+    },
+    Document {
+        document: Document,
+        caption: Option<String>,
+        caption_entities: Option<Vec<MessageEntity>>,
     },
     Photo {
         photo: Vec<PhotoSize>,
         caption: Option<String>,
         caption_entities: Option<Vec<MessageEntity>>,
-        reply_markup: Option<InlineKeyboardMarkup>,
     },
     Dice {
         dice: Dice,
-        reply_markup: Option<InlineKeyboardMarkup>,
     },
     NewChatMembers(Vec<User>),
     LeftChatMember(User),
@@ -145,6 +143,14 @@ impl MessageKind {
     }
 
     #[must_use]
+    pub fn document(&self) -> Option<&Document> {
+        match self {
+            Self::Animation { document, .. } | Self::Document { document, .. } => Some(document),
+            _ => None,
+        }
+    }
+
+    #[must_use]
     pub fn photo(&self) -> Option<&[PhotoSize]> {
         match self {
             Self::Photo { photo, .. } => Some(photo),
@@ -173,7 +179,8 @@ impl MessageKind {
         match self {
             Self::Animation { caption, .. }
             | Self::Audio { caption, .. }
-            | Self::Photo { caption, .. } => caption.as_deref(),
+            | Self::Photo { caption, .. }
+            | Self::Document { caption, .. } => caption.as_deref(),
             _ => None,
         }
     }
@@ -189,19 +196,10 @@ impl MessageKind {
             }
             | Self::Photo {
                 caption_entities, ..
+            }
+            | Self::Document {
+                caption_entities, ..
             } => caption_entities.as_deref(),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn reply_markup(&self) -> Option<&InlineKeyboardMarkup> {
-        match self {
-            Self::Text { reply_markup, .. }
-            | Self::Animation { reply_markup, .. }
-            | Self::Audio { reply_markup, .. }
-            | Self::Photo { reply_markup, .. }
-            | Self::Dice { reply_markup, .. } => reply_markup.as_ref(),
             _ => None,
         }
     }
@@ -240,6 +238,7 @@ mod raw {
         // TODO: Media messages.
         pub animation: Option<Animation>,
         pub audio: Option<Audio>,
+        pub document: Option<Document>,
         pub photo: Option<Vec<PhotoSize>>,
         // TODO: Media messages.
         pub caption: Option<String>,
@@ -289,6 +288,7 @@ mod raw {
                 has_protected_content: raw.has_protected_content,
                 media_group_id: raw.media_group_id,
                 author_signature: raw.author_signature,
+                reply_markup: raw.reply_markup,
                 kind: {
                     #[allow(clippy::enum_glob_use)]
                     use MessageKind::*;
@@ -297,34 +297,35 @@ mod raw {
                         Text {
                             text,
                             entities: raw.entities,
-                            reply_markup: raw.reply_markup,
                         }
                     } else if let Some(animation) = raw.animation {
                         Animation {
                             animation,
-                            reply_markup: raw.reply_markup,
+                            // See: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1672
+                            document: raw.document.unwrap(),
                             caption: raw.caption,
                             caption_entities: raw.caption_entities,
                         }
                     } else if let Some(audio) = raw.audio {
                         Audio {
                             audio,
-                            reply_markup: raw.reply_markup,
+                            caption: raw.caption,
+                            caption_entities: raw.caption_entities,
+                        }
+                    } else if let Some(document) = raw.document {
+                        Document {
+                            document,
                             caption: raw.caption,
                             caption_entities: raw.caption_entities,
                         }
                     } else if let Some(photo) = raw.photo {
                         Photo {
                             photo,
-                            reply_markup: raw.reply_markup,
                             caption: raw.caption,
                             caption_entities: raw.caption_entities,
                         }
                     } else if let Some(dice) = raw.dice {
-                        Dice {
-                            dice,
-                            reply_markup: raw.reply_markup,
-                        }
+                        Dice { dice }
                     } else if let Some(new_chat_members) = raw.new_chat_members {
                         NewChatMembers(new_chat_members)
                     } else if let Some(left_chat_member) = raw.left_chat_member {

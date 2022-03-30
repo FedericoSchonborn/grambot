@@ -96,3 +96,17 @@ pub struct Audio {
     pub size: Option<i32>,
     pub thumb: Option<PhotoSize>,
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+pub struct Document {
+    #[serde(rename = "file_id")]
+    pub id: String,
+    #[serde(rename = "file_unique_id")]
+    pub unique_id: String,
+    pub thumb: Option<PhotoSize>,
+    #[serde(rename = "file_name")]
+    pub name: Option<String>,
+    pub mime_type: Option<String>,
+    #[serde(rename = "file_size")]
+    pub size: Option<i32>,
+}
