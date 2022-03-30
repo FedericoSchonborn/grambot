@@ -1,5 +1,5 @@
-use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use time::OffsetDateTime;
 
 use crate::types::{
     Animation, Audio, AutoDeleteTimerChanged, Chat, Dice, Document, InlineKeyboardMarkup,
@@ -12,18 +12,18 @@ pub struct Message {
     pub id: i64,
     pub from: Option<User>,
     pub sender_chat: Option<Chat>,
-    pub date: DateTime<Utc>,
+    pub date: OffsetDateTime,
     pub chat: Chat,
     pub forward_from: Option<User>,
     pub forward_from_chat: Option<Chat>,
     pub forward_from_message_id: Option<i64>,
     pub forward_signature: Option<String>,
     pub forward_sender_name: Option<String>,
-    pub forward_date: Option<DateTime<Utc>>,
+    pub forward_date: Option<OffsetDateTime>,
     pub is_automatic_forward: Option<bool>,
     pub reply_to_message: Option<Box<Message>>,
     pub via_bot: Option<User>,
-    pub edit_date: Option<DateTime<Utc>>,
+    pub edit_date: Option<OffsetDateTime>,
     pub has_protected_content: Option<bool>,
     pub media_group_id: Option<String>,
     pub author_signature: Option<String>,
@@ -206,6 +206,8 @@ impl MessageKind {
 }
 
 mod raw {
+    use time::OffsetDateTime;
+
     use crate::types::Animation;
 
     use super::*;
@@ -215,21 +217,21 @@ mod raw {
         pub message_id: i64,
         pub from: Option<User>,
         pub sender_chat: Option<Chat>,
-        #[serde(with = "chrono::serde::ts_seconds")]
-        pub date: DateTime<Utc>,
+        #[serde(with = "time::serde::timestamp")]
+        pub date: OffsetDateTime,
         pub chat: Chat,
         pub forward_from: Option<User>,
         pub forward_from_chat: Option<Chat>,
         pub forward_from_message_id: Option<i64>,
         pub forward_signature: Option<String>,
         pub forward_sender_name: Option<String>,
-        #[serde(default, with = "chrono::serde::ts_seconds_option")]
-        pub forward_date: Option<DateTime<Utc>>,
+        #[serde(default, with = "time::serde::timestamp::option")]
+        pub forward_date: Option<OffsetDateTime>,
         pub is_automatic_forward: Option<bool>,
         pub reply_to_message: Option<Box<Message>>,
         pub via_bot: Option<User>,
-        #[serde(default, with = "chrono::serde::ts_seconds_option")]
-        pub edit_date: Option<DateTime<Utc>>,
+        #[serde(default, with = "time::serde::timestamp::option")]
+        pub edit_date: Option<OffsetDateTime>,
         pub has_protected_content: Option<bool>,
         pub media_group_id: Option<String>,
         pub author_signature: Option<String>,
