@@ -1,53 +1,50 @@
-use hyper::Method;
+use crate::{methods::GetUpdates, types::AllowedUpdate};
 
-use crate::{
-    methods::GetUpdates,
-    types::{AllowedUpdate, Update},
-    Bot, Error,
-};
-
-#[derive(Debug, Clone)]
-pub struct GetUpdatesBuilder<'bot> {
-    bot: &'bot Bot,
-    inner: GetUpdates,
+#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct GetUpdatesBuilder {
+    offset: Option<i32>,
+    limit: Option<i8>,
+    timeout: Option<i32>,
+    allowed_updates: Option<Vec<AllowedUpdate>>,
 }
 
-impl<'bot> GetUpdatesBuilder<'bot> {
+impl GetUpdatesBuilder {
     #[must_use]
-    pub fn new(bot: &'bot Bot) -> Self {
-        Self {
-            bot,
-            inner: GetUpdates::new(),
-        }
+    pub fn new() -> Self {
+        Self::default()
     }
 
     #[must_use]
     pub fn offset(mut self, value: i32) -> Self {
-        self.inner.offset = Some(value);
+        self.offset = Some(value);
         self
     }
 
     #[must_use]
     pub fn limit(mut self, value: i8) -> Self {
-        self.inner.limit = Some(value);
+        self.limit = Some(value);
         self
     }
 
     #[must_use]
     pub fn timeout(mut self, value: i32) -> Self {
-        self.inner.timeout = Some(value);
+        self.timeout = Some(value);
         self
     }
 
     #[must_use]
     pub fn allowed_updates(mut self, value: Vec<AllowedUpdate>) -> Self {
-        self.inner.allowed_updates = Some(value);
+        self.allowed_updates = Some(value);
         self
     }
 
-    pub async fn send(self) -> Result<Vec<Update>, Error> {
-        self.bot
-            .request(Method::GET, "getUpdates", self.inner)
-            .await
+    #[must_use]
+    pub fn build(self) -> GetUpdates {
+        GetUpdates {
+            offset: self.offset,
+            limit: self.limit,
+            timeout: self.timeout,
+            allowed_updates: self.allowed_updates,
+        }
     }
 }

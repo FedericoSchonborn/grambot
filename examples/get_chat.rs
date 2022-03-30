@@ -1,16 +1,13 @@
 use std::env::var;
 
 use anyhow::Result;
-use grambot::Bot;
+use grambot::{methods::GetChat, Bot};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
     let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
-    println!(
-        "{:#?}",
-        bot.get_chat(var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?)
-            .await?
-    );
+    let chat_id = var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?.into();
+    println!("{:#?}", bot.send(GetChat(chat_id)).await?);
 
     Ok(())
 }

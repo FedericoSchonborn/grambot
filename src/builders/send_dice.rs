@@ -1,55 +1,51 @@
-use hyper::Method;
-
 use crate::{
     methods::SendDice,
-    types::{ChatId, DiceEmoji, Message, ReplyMarkup},
-    Bot, Error,
+    types::{ChatId, DiceEmoji, ReplyMarkup},
 };
 
-#[derive(Debug, Clone)]
-pub struct SendDiceBuilder<'bot> {
-    bot: &'bot Bot,
-    inner: SendDice,
+#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct SendDiceBuilder {
+    emoji: Option<DiceEmoji>,
+    disable_notification: Option<bool>,
+    protect_content: Option<bool>,
+    reply_to_message_id: Option<i64>,
+    allow_sending_without_reply: Option<bool>,
+    reply_markup: Option<ReplyMarkup>,
 }
 
-impl<'bot> SendDiceBuilder<'bot> {
-    pub fn new<C>(bot: &'bot Bot, chat_id: C) -> Self
-    where
-        C: Into<ChatId>,
-    {
-        Self {
-            bot,
-            inner: SendDice::new(chat_id),
-        }
+impl SendDiceBuilder {
+    #[must_use]
+    pub fn new() -> Self {
+        Self::default()
     }
 
     #[must_use]
     pub fn emoji(mut self, value: DiceEmoji) -> Self {
-        self.inner.emoji = Some(value);
+        self.emoji = Some(value);
         self
     }
 
     #[must_use]
     pub fn disable_notification(mut self, value: bool) -> Self {
-        self.inner.disable_notification = Some(value);
+        self.disable_notification = Some(value);
         self
     }
 
     #[must_use]
     pub fn protect_content(mut self, value: bool) -> Self {
-        self.inner.protect_content = Some(value);
+        self.protect_content = Some(value);
         self
     }
 
     #[must_use]
     pub fn reply_to_message_id(mut self, value: i64) -> Self {
-        self.inner.reply_to_message_id = Some(value);
+        self.reply_to_message_id = Some(value);
         self
     }
 
     #[must_use]
     pub fn allow_sending_without_reply(mut self, value: bool) -> Self {
-        self.inner.allow_sending_without_reply = Some(value);
+        self.allow_sending_without_reply = Some(value);
         self
     }
 
@@ -58,11 +54,22 @@ impl<'bot> SendDiceBuilder<'bot> {
     where
         M: Into<ReplyMarkup>,
     {
-        self.inner.reply_markup = Some(value.into());
+        self.reply_markup = Some(value.into());
         self
     }
 
-    pub async fn send(self) -> Result<Message, Error> {
-        self.bot.request(Method::POST, "sendDice", self.inner).await
+    pub fn build<C>(self, chat_id: C) -> SendDice
+    where
+        C: Into<ChatId>,
+    {
+        SendDice {
+            chat_id: chat_id.into(),
+            emoji: self.emoji,
+            disable_notification: self.disable_notification,
+            protect_content: self.protect_content,
+            reply_to_message_id: self.reply_to_message_id,
+            allow_sending_without_reply: self.allow_sending_without_reply,
+            reply_markup: self.reply_markup,
+        }
     }
 }

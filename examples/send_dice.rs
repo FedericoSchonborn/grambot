@@ -1,18 +1,18 @@
 use std::env::var;
 
 use anyhow::Result;
-use grambot::Bot;
+use grambot::{methods::SendDice, types::DiceEmoji, Bot};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
     let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
     let chat_id = var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?;
 
-    let message = bot
-        .new_dice(chat_id)
+    let request = SendDice::builder()
+        .emoji(DiceEmoji::Basketball)
         .disable_notification(true)
-        .send()
-        .await?;
+        .build(chat_id);
+    let message = bot.send(request).await?;
     println!("{message:#?}");
 
     Ok(())

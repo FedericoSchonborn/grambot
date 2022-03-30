@@ -1,19 +1,24 @@
 use std::env::var;
 
 use anyhow::Result;
-use grambot::{types::ChatAction, Bot};
+use grambot::{
+    methods::{SendChatAction, SendMessage},
+    types::ChatAction,
+    Bot,
+};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
     let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
     let chat_id = var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?;
 
-    bot.send_chat_action(chat_id, ChatAction::Typing).await?;
-    let message = bot
-        .new_message(chat_id, "Hi!")
-        .disable_notification(true)
-        .send()
+    bot.send(SendChatAction::new(chat_id, ChatAction::Typing))
         .await?;
+
+    let request = SendMessage::builder()
+        .disable_notification(true)
+        .build(chat_id, "Hi!");
+    let message = bot.send(request).await?;
     println!("{message:#?}");
 
     Ok(())

@@ -2,6 +2,7 @@ use std::env::var;
 
 use anyhow::Result;
 use grambot::{
+    methods::SendMessage,
     types::{KeyboardButton, ReplyKeyboardMarkup},
     Bot,
 };
@@ -21,12 +22,11 @@ async fn main() -> Result<()> {
         ],
     };
 
-    let message = bot
-        .new_message(chat_id, "Do you want to play?")
+    let request = SendMessage::builder()
         .reply_markup(keyboard)
         .disable_notification(true)
-        .send()
-        .await?;
+        .build(chat_id, "Do you want to play?");
+    let message = bot.send(request).await?;
     println!("{message:#?}");
 
     Ok(())

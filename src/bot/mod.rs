@@ -1,15 +1,10 @@
 //! Bot API client.
 
-use hyper::{body, client::HttpConnector, Body, Client, Method, Request};
+use hyper::{body, client::HttpConnector, Body, Client};
 use hyper_tls::HttpsConnector;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::Deserialize;
 
-use crate::{
-    builders::{ForwardMessageBuilder, GetUpdatesBuilder, SendDiceBuilder, SendMessageBuilder},
-    error::Error,
-    methods::{GetChat, SendChatAction},
-    types::{BotUser, Chat, ChatAction, ChatId, Response},
-};
+use crate::{error::Error, traits::Request, types::ResponseParameters};
 
 mod builder;
 pub use builder::*;
@@ -40,107 +35,48 @@ impl Bot {
         Builder::new()
     }
 
-    pub(crate) async fn request<P, T>(
-        &self,
-        method: Method,
-        endpoint: &str,
-        params: P,
-    ) -> Result<T, Error>
+    pub async fn send<R>(&self, request: R) -> Result<R::Output, Error>
     where
-        P: Serialize,
-        T: DeserializeOwned,
+        R: Request,
     {
-        let content = serde_json::to_vec(&params)?;
+        #[derive(Deserialize)]
+        pub struct Response<T> {
+            ok: bool,
+            description: Option<String>,
+            result: Option<T>,
+            error_code: Option<i32>,
+            parameters: Option<ResponseParameters>,
+        }
+
+        let content = serde_json::to_vec(&request)?;
         let body = Body::from(content);
-        let request = Request::builder()
-            .method(method)
+        let request = hyper::Request::builder()
+            .method(R::METHOD)
             .uri(format!(
                 "{server}/bot{token}/{endpoint}",
                 server = self.server,
                 token = self.token,
+                endpoint = R::NAME,
             ))
             .header("Content-Type", "application/json")
             .body(body)?;
 
         let body = self.client.request(request).await?.into_body();
         let bytes = body::to_bytes(body).await?;
-        let response: Response<T> = serde_json::from_slice(&bytes)?;
-        match response {
-            Response::Ok(result) => Ok(result),
-            Response::Err(err) => Err(err),
+
+        let response: Response<R::Output> = serde_json::from_slice(&bytes)?;
+        if response.ok {
+            Ok(response
+                .result
+                .expect("result field is missing in ok response"))
+        } else {
+            Err(Error::Response {
+                description: response
+                    .description
+                    .expect("description field is missing in error response"),
+                error_code: response.error_code,
+                parameters: response.parameters,
+            })
         }
-    }
-
-    #[must_use]
-    pub fn get_updates(&self) -> GetUpdatesBuilder<'_> {
-        GetUpdatesBuilder::new(self)
-    }
-
-    pub async fn get_me(&self) -> Result<BotUser, Error> {
-        self.request(Method::GET, "getMe", ()).await
-    }
-
-    pub async fn log_out(&self) -> Result<(), Error> {
-        self.request::<_, bool>(Method::POST, "logOut", ())
-            .await
-            .map(|_| ())
-    }
-
-    pub async fn close(&self) -> Result<(), Error> {
-        self.request::<_, bool>(Method::POST, "close", ())
-            .await
-            .map(|_| ())
-    }
-
-    #[must_use]
-    pub fn new_message<C, T>(&self, chat_id: C, text: T) -> SendMessageBuilder<'_>
-    where
-        C: Into<ChatId>,
-        T: Into<String>,
-    {
-        SendMessageBuilder::new(self, chat_id, text)
-    }
-
-    #[must_use]
-    pub fn forward_message<C, F>(
-        &self,
-        chat_id: C,
-        from_chat_id: F,
-        message_id: i64,
-    ) -> ForwardMessageBuilder<'_>
-    where
-        C: Into<ChatId>,
-        F: Into<ChatId>,
-    {
-        ForwardMessageBuilder::new(self, chat_id, from_chat_id, message_id)
-    }
-
-    #[must_use]
-    pub fn new_dice<C>(&self, chat_id: C) -> SendDiceBuilder<'_>
-    where
-        C: Into<ChatId>,
-    {
-        SendDiceBuilder::new(self, chat_id)
-    }
-
-    pub async fn send_chat_action<C>(&self, chat_id: C, action: ChatAction) -> Result<(), Error>
-    where
-        C: Into<ChatId>,
-    {
-        self.request::<_, bool>(
-            Method::POST,
-            "sendChatAction",
-            SendChatAction::new(chat_id, action),
-        )
-        .await
-        .map(|_| ())
-    }
-
-    pub async fn get_chat<C>(&self, chat_id: C) -> Result<Chat, Error>
-    where
-        C: Into<ChatId>,
-    {
-        self.request(Method::GET, "getChat", GetChat::new(chat_id))
-            .await
     }
 }
