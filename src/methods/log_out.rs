@@ -9,5 +9,5 @@ pub struct LogOut;
 impl Request for LogOut {
     const NAME: &'static str = "logOut";
     const METHOD: Method = Method::POST;
-    type Output = ();
+    type Output = bool;
 }

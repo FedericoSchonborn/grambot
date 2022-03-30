@@ -1,7 +1,10 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::{methods::Request, types::ChatId};
+use crate::{
+    methods::Request,
+    types::{Chat, ChatId},
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct GetChat(#[serde(rename = "chat_id")] pub ChatId);
@@ -18,5 +21,5 @@ impl GetChat {
 impl Request for GetChat {
     const NAME: &'static str = "getChat";
     const METHOD: Method = Method::GET;
-    type Output = ();
+    type Output = Chat;
 }
