@@ -55,7 +55,7 @@ impl<'bot> SendMessageBuilder<'bot> {
     }
 
     #[must_use]
-    pub fn reply_to_message_id(mut self, value: i32) -> Self {
+    pub fn reply_to_message_id(mut self, value: i64) -> Self {
         self.inner.reply_to_message_id = Some(value);
         self
     }

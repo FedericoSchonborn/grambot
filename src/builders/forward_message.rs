@@ -13,7 +13,7 @@ pub struct ForwardMessageBuilder<'bot> {
 }
 
 impl<'bot> ForwardMessageBuilder<'bot> {
-    pub fn new<C, F>(bot: &'bot Bot, chat_id: C, from_chat_id: F, message_id: i32) -> Self
+    pub fn new<C, F>(bot: &'bot Bot, chat_id: C, from_chat_id: F, message_id: i64) -> Self
     where
         C: Into<ChatId>,
         F: Into<ChatId>,

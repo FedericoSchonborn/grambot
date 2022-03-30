@@ -106,7 +106,7 @@ impl Bot {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_id: i32,
+        message_id: i64,
     ) -> ForwardMessageBuilder<'_>
     where
         C: Into<ChatId>,

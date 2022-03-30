@@ -9,14 +9,14 @@ use crate::types::{
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 #[serde(from = "raw::Message")]
 pub struct Message {
-    pub id: i32,
+    pub id: i64,
     pub from: Option<User>,
     pub sender_chat: Option<Chat>,
     pub date: DateTime<Utc>,
     pub chat: Chat,
     pub forward_from: Option<User>,
     pub forward_from_chat: Option<Chat>,
-    pub forward_from_message_id: Option<i32>,
+    pub forward_from_message_id: Option<i64>,
     pub forward_signature: Option<String>,
     pub forward_sender_name: Option<String>,
     pub forward_date: Option<DateTime<Utc>>,
@@ -214,7 +214,7 @@ mod raw {
 
     #[derive(Deserialize)]
     pub struct Message {
-        pub message_id: i32,
+        pub message_id: i64,
         pub from: Option<User>,
         pub sender_chat: Option<Chat>,
         #[serde(with = "chrono::serde::ts_seconds")]
@@ -222,7 +222,7 @@ mod raw {
         pub chat: Chat,
         pub forward_from: Option<User>,
         pub forward_from_chat: Option<Chat>,
-        pub forward_from_message_id: Option<i32>,
+        pub forward_from_message_id: Option<i64>,
         pub forward_signature: Option<String>,
         pub forward_sender_name: Option<String>,
         #[serde(default, with = "chrono::serde::ts_seconds_option")]

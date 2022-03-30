@@ -1,20 +1,16 @@
 use serde::Deserialize;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
-#[serde(from = "raw::MessageId")]
-pub struct MessageId(pub i32);
+pub struct MessageId(#[serde(rename = "message_id")] pub i64);
 
-mod raw {
-    use super::*;
-
-    #[derive(Deserialize)]
-    pub struct MessageId {
-        message_id: i32,
+impl From<i64> for MessageId {
+    fn from(id: i64) -> Self {
+        Self(id)
     }
+}
 
-    impl From<MessageId> for super::MessageId {
-        fn from(raw: MessageId) -> Self {
-            Self(raw.message_id)
-        }
+impl From<MessageId> for i64 {
+    fn from(id: MessageId) -> Self {
+        id.0
     }
 }

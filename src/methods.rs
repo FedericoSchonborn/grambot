@@ -45,7 +45,7 @@ pub struct SendMessage {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub protect_content: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub reply_to_message_id: Option<i32>,
+    pub reply_to_message_id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_sending_without_reply: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -77,7 +77,7 @@ impl SendMessage {
 pub struct ForwardMessage {
     pub chat_id: ChatId,
     pub from_chat_id: ChatId,
-    pub message_id: i32,
+    pub message_id: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_notification: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -85,7 +85,7 @@ pub struct ForwardMessage {
 }
 
 impl ForwardMessage {
-    pub fn new<C, F>(chat_id: C, from_chat_id: F, message_id: i32) -> Self
+    pub fn new<C, F>(chat_id: C, from_chat_id: F, message_id: i64) -> Self
     where
         C: Into<ChatId>,
         F: Into<ChatId>,
@@ -110,7 +110,7 @@ pub struct SendDice {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub protect_content: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub reply_to_message_id: Option<i32>,
+    pub reply_to_message_id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub allow_sending_without_reply: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
