@@ -1,9 +1,8 @@
 use serde::Deserialize;
-use time::OffsetDateTime;
 
 use crate::types::{
-    Animation, Audio, AutoDeleteTimerChanged, Chat, Dice, Document, InlineKeyboardMarkup,
-    MessageEntity, PhotoSize, User,
+    time::OffsetDateTime, Animation, Audio, AutoDeleteTimerChanged, Chat, Dice, Document,
+    InlineKeyboardMarkup, MessageEntity, PhotoSize, User,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
@@ -206,10 +205,6 @@ impl MessageKind {
 }
 
 mod raw {
-    use time::OffsetDateTime;
-
-    use crate::types::Animation;
-
     use super::*;
 
     #[derive(Deserialize)]
