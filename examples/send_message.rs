@@ -17,7 +17,7 @@ async fn main() -> Result<()> {
         .disable_notification(true)
         .build(chat_id, "Hello again, world!");
     let message = bot.send(request).await?;
-    println!("{message:#?}");
+    println!("{:#?}", message.text());
 
     Ok(())
 }

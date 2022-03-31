@@ -57,6 +57,16 @@ impl Message {
     }
 
     #[must_use]
+    pub fn location(&self) -> Option<&Location> {
+        self.kind.location()
+    }
+
+    #[must_use]
+    pub fn venue(&self) -> Option<&Venue> {
+        self.kind.venue()
+    }
+
+    #[must_use]
     pub fn entities(&self) -> Option<&[MessageEntity]> {
         self.kind.entities()
     }
