@@ -2,10 +2,10 @@ use serde::Deserialize;
 
 use crate::types::{
     time::OffsetDateTime, Animation, Audio, AutoDeleteTimerChanged, Chat, Dice, Document,
-    InlineKeyboardMarkup, MessageEntity, PhotoSize, User,
+    InlineKeyboardMarkup, Location, MessageEntity, PhotoSize, User, Venue,
 };
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
 #[serde(from = "raw::Message")]
 pub struct Message {
     pub id: i64,
@@ -73,7 +73,7 @@ impl Message {
 }
 
 // Reference: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1606
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum MessageKind {
     Text {
         text: String,
@@ -100,8 +100,11 @@ pub enum MessageKind {
         caption: Option<String>,
         caption_entities: Option<Vec<MessageEntity>>,
     },
-    Dice {
-        dice: Dice,
+    Dice(Dice),
+    Location(Location),
+    Venue {
+        location: Location,
+        venue: Venue,
     },
     NewChatMembers(Vec<User>),
     LeftChatMember(User),
@@ -160,7 +163,23 @@ impl MessageKind {
     #[must_use]
     pub fn dice(&self) -> Option<&Dice> {
         match self {
-            Self::Dice { dice, .. } => Some(dice),
+            Self::Dice(dice) => Some(dice),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn location(&self) -> Option<&Location> {
+        match self {
+            Self::Location(location) | Self::Venue { location, .. } => Some(location),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn venue(&self) -> Option<&Venue> {
+        match self {
+            Self::Venue { venue, .. } => Some(venue),
             _ => None,
         }
     }
@@ -241,6 +260,8 @@ mod raw {
         pub caption: Option<String>,
         pub caption_entities: Option<Vec<MessageEntity>>,
         pub dice: Option<Dice>,
+        pub venue: Option<Venue>,
+        pub location: Option<Location>,
         pub new_chat_members: Option<Vec<User>>,
         pub left_chat_member: Option<User>,
         pub new_chat_title: Option<String>,
@@ -322,7 +343,15 @@ mod raw {
                             caption_entities: raw.caption_entities,
                         }
                     } else if let Some(dice) = raw.dice {
-                        Dice { dice }
+                        Dice(dice)
+                    } else if let Some(venue) = raw.venue {
+                        Venue {
+                            venue,
+                            // See: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1749
+                            location: raw.location.unwrap(),
+                        }
+                    } else if let Some(location) = raw.location {
+                        Location(location)
                     } else if let Some(new_chat_members) = raw.new_chat_members {
                         NewChatMembers(new_chat_members)
                     } else if let Some(left_chat_member) = raw.left_chat_member {

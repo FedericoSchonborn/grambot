@@ -110,3 +110,45 @@ pub struct Document {
     #[serde(rename = "file_size")]
     pub size: Option<i32>,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Deserialize)]
+pub struct Location {
+    pub longitude: f64,
+    pub latitude: f64,
+    pub horizontal_accuracy: f64,
+    pub live_period: Option<i32>,
+    pub heading: Option<i16>,
+    pub proximity_alert_radius: Option<i32>,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+pub struct Venue {
+    pub location: Location,
+    pub title: String,
+    pub address: String,
+    pub foursquare_id: Option<String>,
+    pub foursquare_type: Option<String>,
+    pub google_place_id: Option<String>,
+    pub google_place_type: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+pub struct InlineQuery {
+    pub id: String,
+    pub from: User,
+    pub query: String,
+    pub offset: String,
+    // TODO: Extend ChatKind?
+    pub chat_type: Option<String>,
+    pub location: Option<Location>,
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+pub struct ChosenInlineResult {
+    #[serde(rename = "result_id")]
+    pub id: String,
+    pub from: User,
+    pub location: Option<Location>,
+    pub inline_message_id: Option<i64>,
+    pub query: String,
+}

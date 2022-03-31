@@ -1,8 +1,8 @@
 use serde::Deserialize;
 
-use crate::types::Message;
+use crate::types::{ChosenInlineResult, InlineQuery, Message};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
 #[serde(from = "raw::Update")]
 pub struct Update {
     pub id: i32,
@@ -14,14 +14,26 @@ impl Update {
     pub fn message(&self) -> Option<&Message> {
         self.kind.message()
     }
+
+    #[must_use]
+    pub fn inline_query(&self) -> Option<&InlineQuery> {
+        self.kind.inline_query()
+    }
+
+    #[must_use]
+    pub fn chosen_inline_result(&self) -> Option<&ChosenInlineResult> {
+        self.kind.chosen_inline_result()
+    }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum UpdateKind {
     Message(Message),
     EditedMessage(Message),
     ChannelPost(Message),
     EditedChannelPost(Message),
+    InlineQuery(InlineQuery),
+    ChosenInlineResult(ChosenInlineResult),
     // TODO
 }
 
@@ -33,6 +45,22 @@ impl UpdateKind {
             | Self::EditedMessage(message)
             | Self::ChannelPost(message)
             | Self::EditedChannelPost(message) => Some(message),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn inline_query(&self) -> Option<&InlineQuery> {
+        match self {
+            Self::InlineQuery(inline_query) => Some(inline_query),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn chosen_inline_result(&self) -> Option<&ChosenInlineResult> {
+        match self {
+            Self::ChosenInlineResult(chosen_inline_result) => Some(chosen_inline_result),
             _ => None,
         }
     }
@@ -48,6 +76,8 @@ mod raw {
         edited_message: Option<Message>,
         channel_post: Option<Message>,
         edited_channel_post: Option<Message>,
+        inline_query: Option<InlineQuery>,
+        chosen_inline_result: Option<ChosenInlineResult>,
         // TODO
     }
 
@@ -67,6 +97,10 @@ mod raw {
                         ChannelPost(channel_post)
                     } else if let Some(edited_channel_post) = raw.edited_channel_post {
                         EditedChannelPost(edited_channel_post)
+                    } else if let Some(inline_query) = raw.inline_query {
+                        InlineQuery(inline_query)
+                    } else if let Some(chosen_inline_result) = raw.chosen_inline_result {
+                        ChosenInlineResult(chosen_inline_result)
                     } else {
                         todo!()
                     }
