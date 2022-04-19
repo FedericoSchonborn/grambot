@@ -8,8 +8,8 @@ use crate::{
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct SendChatAction {
-    chat_id: ChatId,
-    action: ChatAction,
+    pub chat_id: ChatId,
+    pub action: ChatAction,
 }
 
 impl SendChatAction {
