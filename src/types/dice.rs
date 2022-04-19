@@ -10,21 +10,32 @@ use crate::types::errors::{ParseDiceKindError, TryFromDiceKindError};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct Dice {
     pub emoji: DiceEmoji,
+    /// Value of the dice:
+    ///
+    /// - 1-6 for [`Dice`](DiceEmoji::Dice), [`Bullseye`](DiceEmoji::Bullseye) and [`Bowling`](DiceEmoji::Bowling).
+    /// - 1-5 for [`Basketball`](DiceEmoji::Basketball) and [`Football`](DiceEmoji::Football).
+    /// - 1-64 for [`SlotMachine`](DiceEmoji::SlotMachine).
     pub value: i8,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 pub enum DiceEmoji {
+    /// Game Die (🎲).
     #[serde(rename = "🎲")]
     Dice,
+    /// Bullseye (🎯).
     #[serde(rename = "🎯")]
     Bullseye,
+    /// Bowling (🎳).
     #[serde(rename = "🎳")]
     Bowling,
+    /// Basketball (🏀).
     #[serde(rename = "🏀")]
     Basketball,
+    /// Football (⚽).
     #[serde(rename = "⚽")]
     Football,
+    /// Slot Machine (🎰).
     #[serde(rename = "🎰")]
     SlotMachine,
 }
