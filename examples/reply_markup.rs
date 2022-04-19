@@ -12,15 +12,15 @@ async fn main() -> Result<()> {
     let bot = Bot::new(var("GRAMBOT_EXAMPLE_TOKEN")?);
     let chat_id = var("GRAMBOT_EXAMPLE_CHATID")?.parse::<i64>()?;
 
-    let keyboard = ReplyKeyboardMarkup {
-        keyboard: vec![
-            vec![KeyboardButton::new("Okay!"), KeyboardButton::new("Nope!")],
-            vec![
-                KeyboardButton::new("Maybe?"),
-                KeyboardButton::new("Ask later."),
-            ],
+    let keyboard = vec![
+        vec![KeyboardButton::new("Okay!"), KeyboardButton::new("Nope!")],
+        vec![
+            KeyboardButton::new("Maybe?"),
+            KeyboardButton::new("Ask later."),
         ],
-    };
+    ]
+    .into_iter()
+    .collect::<ReplyKeyboardMarkup>();
 
     let request = SendMessage::builder()
         .reply_markup(keyboard)

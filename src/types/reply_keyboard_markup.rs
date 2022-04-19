@@ -14,3 +14,25 @@ impl ReplyKeyboardMarkup {
         Self { keyboard }
     }
 }
+
+impl FromIterator<KeyboardButton> for ReplyKeyboardMarkup {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = KeyboardButton>,
+    {
+        Self {
+            keyboard: vec![Vec::from_iter(iter)],
+        }
+    }
+}
+
+impl FromIterator<Vec<KeyboardButton>> for ReplyKeyboardMarkup {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = Vec<KeyboardButton>>,
+    {
+        Self {
+            keyboard: Vec::from_iter(iter),
+        }
+    }
+}

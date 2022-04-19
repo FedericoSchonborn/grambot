@@ -13,3 +13,21 @@ impl InlineKeyboardMarkup {
         Self(keyboard)
     }
 }
+
+impl FromIterator<InlineKeyboardButton> for InlineKeyboardMarkup {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = InlineKeyboardButton>,
+    {
+        Self(vec![Vec::from_iter(iter)])
+    }
+}
+
+impl FromIterator<Vec<InlineKeyboardButton>> for InlineKeyboardMarkup {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = Vec<InlineKeyboardButton>>,
+    {
+        Self(Vec::from_iter(iter))
+    }
+}
