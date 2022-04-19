@@ -1,5 +1,5 @@
 use std::{
-    fmt::{self, Display, Formatter, Write},
+    fmt::{self, Display, Formatter},
     str::FromStr,
 };
 
@@ -29,6 +29,20 @@ pub enum DiceEmoji {
     SlotMachine,
 }
 
+impl DiceEmoji {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Dice => "🎲",
+            Self::Bullseye => "🎯",
+            Self::Bowling => "🎳",
+            Self::Basketball => "🏀",
+            Self::Football => "⚽",
+            Self::SlotMachine => "🎰",
+        }
+    }
+}
+
 impl Default for DiceEmoji {
     fn default() -> Self {
         Self::Dice
@@ -37,14 +51,7 @@ impl Default for DiceEmoji {
 
 impl Display for DiceEmoji {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_char(match self {
-            Self::Dice => '🎲',
-            Self::Bullseye => '🎯',
-            Self::Bowling => '🎳',
-            Self::Basketball => '🏀',
-            Self::Football => '⚽',
-            Self::SlotMachine => '🎰',
-        })
+        f.write_str(self.as_str())
     }
 }
 
