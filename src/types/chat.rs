@@ -24,14 +24,21 @@ pub enum ChatKind {
     Channel,
 }
 
-impl Display for ChatKind {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str(match self {
+impl ChatKind {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
             Self::Private => "private",
             Self::Group => "group",
             Self::Supergroup => "supergroup",
             Self::Channel => "channel",
-        })
+        }
+    }
+}
+
+impl Display for ChatKind {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
 pub struct KeyboardButton {
     pub text: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -17,7 +17,8 @@ impl KeyboardButton {
     {
         Self {
             text: text.into(),
-            ..KeyboardButton::default()
+            request_contact: None,
+            request_location: None,
         }
     }
 }

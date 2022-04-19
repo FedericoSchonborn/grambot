@@ -5,7 +5,6 @@ use serde::Deserialize;
 pub extern crate time;
 
 mod allowed_update;
-mod auto_delete_timer_changed;
 mod chat;
 mod chat_action;
 mod chat_id;
@@ -28,7 +27,6 @@ mod update;
 mod user;
 
 pub use allowed_update::*;
-pub use auto_delete_timer_changed::*;
 pub use chat::*;
 pub use chat_action::*;
 pub use chat_id::*;
@@ -134,6 +132,9 @@ pub struct Venue {
     pub google_place_id: Option<String>,
     pub google_place_type: Option<String>,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+pub struct AutoDeleteTimerChanged(#[serde(rename = "message_auto_delete_time")] pub i32);
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
 pub struct InlineQuery {

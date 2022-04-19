@@ -23,9 +23,10 @@ pub enum ChatAction {
     UploadVideoNote,
 }
 
-impl Display for ChatAction {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str(match self {
+impl ChatAction {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
             Self::Typing => "typing",
             Self::UploadPhoto => "upload_photo",
             Self::RecordVideo => "record_video",
@@ -37,7 +38,13 @@ impl Display for ChatAction {
             Self::FindLocation => "find_location",
             Self::RecordVideoNote => "record_video_note",
             Self::UploadVideoNote => "upload_video_note",
-        })
+        }
+    }
+}
+
+impl Display for ChatAction {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 

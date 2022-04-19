@@ -15,13 +15,20 @@ pub enum ParseMode {
     MarkdownV2,
 }
 
-impl Display for ParseMode {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str(match self {
+impl ParseMode {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
             Self::Html => "HTML",
             Self::Markdown => "Markdown",
             Self::MarkdownV2 => "MarkdownV2",
-        })
+        }
+    }
+}
+
+impl Display for ParseMode {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 

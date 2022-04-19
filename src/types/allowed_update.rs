@@ -26,9 +26,10 @@ pub enum AllowedUpdate {
     CanJoinRequest,
 }
 
-impl Display for AllowedUpdate {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str(match self {
+impl AllowedUpdate {
+    #[must_use]
+    pub fn as_str(&self) -> &'static str {
+        match self {
             Self::Message => "message",
             Self::EditedMessage => "edited_message",
             Self::ChannelPost => "channel_post",
@@ -43,7 +44,13 @@ impl Display for AllowedUpdate {
             Self::MyChatMember => "my_chat_member",
             Self::ChatMember => "chat_member",
             Self::CanJoinRequest => "can_join_request",
-        })
+        }
+    }
+}
+
+impl Display for AllowedUpdate {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
