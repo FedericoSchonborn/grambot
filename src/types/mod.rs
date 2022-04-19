@@ -22,6 +22,8 @@ mod parse_mode;
 mod reply_keyboard_markup;
 mod reply_keyboard_remove;
 mod reply_markup;
+#[path = "true.rs"]
+mod true_;
 mod update;
 mod user;
 
@@ -42,6 +44,7 @@ pub use parse_mode::*;
 pub use reply_keyboard_markup::*;
 pub use reply_keyboard_remove::*;
 pub use reply_markup::*;
+pub use true_::*;
 pub use update::*;
 pub use user::*;
 

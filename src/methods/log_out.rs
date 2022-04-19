@@ -1,7 +1,7 @@
 use hyper::Method;
 use serde::Serialize;
 
-use crate::methods::Request;
+use crate::{methods::Request, types::True};
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct LogOut;
@@ -9,5 +9,5 @@ pub struct LogOut;
 impl Request for LogOut {
     const NAME: &'static str = "logOut";
     const METHOD: Method = Method::POST;
-    type Output = bool;
+    type Output = True;
 }

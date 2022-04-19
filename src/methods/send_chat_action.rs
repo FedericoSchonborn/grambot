@@ -3,7 +3,7 @@ use serde::Serialize;
 
 use crate::{
     methods::Request,
-    types::{ChatAction, ChatId},
+    types::{ChatAction, ChatId, True},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
@@ -27,5 +27,5 @@ impl SendChatAction {
 impl Request for SendChatAction {
     const NAME: &'static str = "sendChatAction";
     const METHOD: Method = Method::POST;
-    type Output = bool;
+    type Output = True;
 }
