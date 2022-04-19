@@ -5,7 +5,7 @@ use std::{
 
 use serde::Serialize;
 
-use crate::types::errors::TryFromChatActionError;
+use crate::types::errors::ParseChatActionError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -42,7 +42,7 @@ impl Display for ChatAction {
 }
 
 impl FromStr for ChatAction {
-    type Err = TryFromChatActionError;
+    type Err = ParseChatActionError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -57,7 +57,7 @@ impl FromStr for ChatAction {
             "find_location" => Ok(Self::FindLocation),
             "record_video_note" => Ok(Self::RecordVideoNote),
             "upload_video_note" => Ok(Self::UploadVideoNote),
-            _ => Err(TryFromChatActionError),
+            _ => Err(ParseChatActionError),
         }
     }
 }

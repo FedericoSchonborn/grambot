@@ -5,7 +5,7 @@ use std::{
 
 use serde::Deserialize;
 
-use crate::types::errors::TryFromChatKindError;
+use crate::types::errors::ParseChatKindError;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct Chat {
@@ -36,7 +36,7 @@ impl Display for ChatKind {
 }
 
 impl FromStr for ChatKind {
-    type Err = TryFromChatKindError;
+    type Err = ParseChatKindError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -44,7 +44,7 @@ impl FromStr for ChatKind {
             "group" => Ok(Self::Group),
             "supergroup" => Ok(Self::Supergroup),
             "channel" => Ok(Self::Channel),
-            _ => Err(TryFromChatKindError),
+            _ => Err(ParseChatKindError),
         }
     }
 }

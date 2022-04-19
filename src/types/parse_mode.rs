@@ -5,7 +5,7 @@ use std::{
 
 use serde::Serialize;
 
-use crate::types::errors::TryFromParseModeError;
+use crate::types::errors::ParseParseModeError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub enum ParseMode {
@@ -26,14 +26,14 @@ impl Display for ParseMode {
 }
 
 impl FromStr for ParseMode {
-    type Err = TryFromParseModeError;
+    type Err = ParseParseModeError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
             "HTML" => Ok(Self::Html),
             "Markdown" => Ok(Self::Markdown),
             "MarkdownV2" => Ok(Self::MarkdownV2),
-            _ => Err(TryFromParseModeError),
+            _ => Err(ParseParseModeError),
         }
     }
 }

@@ -5,7 +5,7 @@ use std::{
 
 use serde::Serialize;
 
-use crate::types::errors::TryFromAllowedUpdateError;
+use crate::types::errors::ParseAllowedUpdateError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -48,7 +48,7 @@ impl Display for AllowedUpdate {
 }
 
 impl FromStr for AllowedUpdate {
-    type Err = TryFromAllowedUpdateError;
+    type Err = ParseAllowedUpdateError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -66,7 +66,7 @@ impl FromStr for AllowedUpdate {
             "my_chat_member" => Ok(Self::MyChatMember),
             "chat_member" => Ok(Self::ChatMember),
             "can_join_request" => Ok(Self::CanJoinRequest),
-            _ => Err(TryFromAllowedUpdateError),
+            _ => Err(ParseAllowedUpdateError),
         }
     }
 }

@@ -5,7 +5,7 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 
-use crate::types::errors::TryFromDiceKindError;
+use crate::types::errors::{ParseDiceKindError, TryFromDiceKindError};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct Dice {
@@ -56,7 +56,7 @@ impl Display for DiceEmoji {
 }
 
 impl FromStr for DiceEmoji {
-    type Err = TryFromDiceKindError;
+    type Err = ParseDiceKindError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -66,7 +66,7 @@ impl FromStr for DiceEmoji {
             "🏀" => Ok(Self::Basketball),
             "⚽" => Ok(Self::Football),
             "🎰" => Ok(Self::SlotMachine),
-            _ => Err(TryFromDiceKindError),
+            _ => Err(ParseDiceKindError),
         }
     }
 }
