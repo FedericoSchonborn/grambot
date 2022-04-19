@@ -48,8 +48,8 @@ pub use user::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct ResponseParameters {
-    pub migrate_to_chat_id: i64,
-    pub retry_after: i32,
+    pub migrate_to_chat_id: Option<i64>,
+    pub retry_after: Option<i32>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
