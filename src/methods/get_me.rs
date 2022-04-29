@@ -9,5 +9,5 @@ pub struct GetMe;
 impl Request for GetMe {
     const NAME: &'static str = "getMe";
     const METHOD: Method = Method::GET;
-    type Output = User;
+    type Response = User;
 }

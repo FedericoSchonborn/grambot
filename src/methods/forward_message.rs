@@ -42,5 +42,5 @@ impl ForwardMessage {
 impl Request for ForwardMessage {
     const NAME: &'static str = "forwardMessage";
     const METHOD: Method = Method::POST;
-    type Output = Message;
+    type Response = Message;
 }

@@ -39,5 +39,5 @@ impl GetUpdates {
 impl Request for GetUpdates {
     const NAME: &'static str = "getUpdates";
     const METHOD: Method = Method::GET;
-    type Output = Vec<Update>;
+    type Response = Vec<Update>;
 }

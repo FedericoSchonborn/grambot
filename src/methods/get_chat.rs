@@ -21,5 +21,5 @@ impl GetChat {
 impl Request for GetChat {
     const NAME: &'static str = "getChat";
     const METHOD: Method = Method::GET;
-    type Output = Chat;
+    type Response = Chat;
 }

@@ -27,5 +27,5 @@ pub use send_message::*;
 pub trait Request: Serialize {
     const NAME: &'static str;
     const METHOD: Method;
-    type Output: DeserializeOwned;
+    type Response: DeserializeOwned;
 }

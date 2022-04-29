@@ -35,7 +35,7 @@ impl Bot {
         Builder::new()
     }
 
-    pub async fn send<R>(&self, request: R) -> Result<R::Output, Error>
+    pub async fn send<R>(&self, request: R) -> Result<R::Response, Error>
     where
         R: Request,
     {
@@ -64,7 +64,7 @@ impl Bot {
         let body = self.client.request(request).await?.into_body();
         let bytes = body::to_bytes(body).await?;
 
-        let response: Response<R::Output> = serde_json::from_slice(&bytes)?;
+        let response: Response<R::Response> = serde_json::from_slice(&bytes)?;
         if response.ok {
             Ok(response
                 .result

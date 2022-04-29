@@ -9,5 +9,5 @@ pub struct Close;
 impl Request for Close {
     const NAME: &'static str = "close";
     const METHOD: Method = Method::POST;
-    type Output = True;
+    type Response = True;
 }
