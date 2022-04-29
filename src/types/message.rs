@@ -33,52 +33,106 @@ pub struct Message {
 impl Message {
     #[must_use]
     pub fn text(&self) -> Option<&str> {
-        self.kind.text()
+        match &self.kind {
+            MessageKind::Text { text, .. } => Some(text),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn animation(&self) -> Option<&Animation> {
-        self.kind.animation()
+        match &self.kind {
+            MessageKind::Animation { animation, .. } => Some(animation),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn audio(&self) -> Option<&Audio> {
-        self.kind.audio()
+        match &self.kind {
+            MessageKind::Audio { audio, .. } => Some(audio),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn document(&self) -> Option<&Document> {
+        match &self.kind {
+            MessageKind::Animation { document, .. } | MessageKind::Document { document, .. } => {
+                Some(document)
+            }
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn photo(&self) -> Option<&[PhotoSize]> {
-        self.kind.photo()
+        match &self.kind {
+            MessageKind::Photo { photo, .. } => Some(photo),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn dice(&self) -> Option<&Dice> {
-        self.kind.dice()
+        match &self.kind {
+            MessageKind::Dice(dice) => Some(dice),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn location(&self) -> Option<&Location> {
-        self.kind.location()
+        match &self.kind {
+            MessageKind::Location(location) | MessageKind::Venue { location, .. } => Some(location),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn venue(&self) -> Option<&Venue> {
-        self.kind.venue()
+        match &self.kind {
+            MessageKind::Venue { venue, .. } => Some(venue),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn entities(&self) -> Option<&[MessageEntity]> {
-        self.kind.entities()
+        match &self.kind {
+            MessageKind::Text { entities, .. } => entities.as_deref(),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn caption(&self) -> Option<&str> {
-        self.kind.caption()
+        match &self.kind {
+            MessageKind::Animation { caption, .. }
+            | MessageKind::Audio { caption, .. }
+            | MessageKind::Photo { caption, .. }
+            | MessageKind::Document { caption, .. } => caption.as_deref(),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn caption_entities(&self) -> Option<&[MessageEntity]> {
-        self.kind.caption_entities()
+        match &self.kind {
+            MessageKind::Animation {
+                caption_entities, ..
+            }
+            | MessageKind::Audio {
+                caption_entities, ..
+            }
+            | MessageKind::Photo {
+                caption_entities, ..
+            }
+            | MessageKind::Document {
+                caption_entities, ..
+            } => caption_entities.as_deref(),
+            _ => None,
+        }
     }
 }
 
@@ -127,110 +181,6 @@ pub enum MessageKind {
     AutoDeleteTimerChanged(AutoDeleteTimerChanged),
     PinnedMessage(Box<Message>),
     // TODO
-}
-
-impl MessageKind {
-    #[must_use]
-    pub fn text(&self) -> Option<&str> {
-        match self {
-            Self::Text { text, .. } => Some(text),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn animation(&self) -> Option<&Animation> {
-        match self {
-            Self::Animation { animation, .. } => Some(animation),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn audio(&self) -> Option<&Audio> {
-        match self {
-            Self::Audio { audio, .. } => Some(audio),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn document(&self) -> Option<&Document> {
-        match self {
-            Self::Animation { document, .. } | Self::Document { document, .. } => Some(document),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn photo(&self) -> Option<&[PhotoSize]> {
-        match self {
-            Self::Photo { photo, .. } => Some(photo),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn dice(&self) -> Option<&Dice> {
-        match self {
-            Self::Dice(dice) => Some(dice),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn location(&self) -> Option<&Location> {
-        match self {
-            Self::Location(location) | Self::Venue { location, .. } => Some(location),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn venue(&self) -> Option<&Venue> {
-        match self {
-            Self::Venue { venue, .. } => Some(venue),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn entities(&self) -> Option<&[MessageEntity]> {
-        match self {
-            Self::Text { entities, .. } => entities.as_deref(),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn caption(&self) -> Option<&str> {
-        match self {
-            Self::Animation { caption, .. }
-            | Self::Audio { caption, .. }
-            | Self::Photo { caption, .. }
-            | Self::Document { caption, .. } => caption.as_deref(),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn caption_entities(&self) -> Option<&[MessageEntity]> {
-        match self {
-            Self::Animation {
-                caption_entities, ..
-            }
-            | Self::Audio {
-                caption_entities, ..
-            }
-            | Self::Photo {
-                caption_entities, ..
-            }
-            | Self::Document {
-                caption_entities, ..
-            } => caption_entities.as_deref(),
-            _ => None,
-        }
-    }
 }
 
 mod raw {
@@ -329,7 +279,7 @@ mod raw {
                     } else if let Some(animation) = raw.animation {
                         Animation {
                             animation,
-                            // See: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1672
+                            // Reference: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1672
                             document: raw.document.unwrap(),
                             caption: raw.caption,
                             caption_entities: raw.caption_entities,
@@ -357,7 +307,7 @@ mod raw {
                     } else if let Some(venue) = raw.venue {
                         Venue {
                             venue,
-                            // See: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1749
+                            // Reference: https://github.com/tdlib/telegram-bot-api/blob/c57b04c4c8c4e8d8bb6fdd0bd3bfb5b93b9d8f05/telegram-bot-api/Client.cpp#L1749
                             location: raw.location.unwrap(),
                         }
                     } else if let Some(location) = raw.location {

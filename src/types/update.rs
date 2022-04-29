@@ -12,32 +12,50 @@ pub struct Update {
 impl Update {
     #[must_use]
     pub fn message(&self) -> Option<&Message> {
-        self.kind.message()
+        match &self.kind {
+            UpdateKind::Message(message) => Some(message),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn edited_message(&self) -> Option<&Message> {
-        self.kind.edited_message()
+        match &self.kind {
+            UpdateKind::EditedMessage(message) => Some(message),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn channel_post(&self) -> Option<&Message> {
-        self.kind.channel_post()
+        match &self.kind {
+            UpdateKind::ChannelPost(message) => Some(message),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn edited_channel_post(&self) -> Option<&Message> {
-        self.kind.edited_channel_post()
+        match &self.kind {
+            UpdateKind::EditedChannelPost(message) => Some(message),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn inline_query(&self) -> Option<&InlineQuery> {
-        self.kind.inline_query()
+        match &self.kind {
+            UpdateKind::InlineQuery(inline_query) => Some(inline_query),
+            _ => None,
+        }
     }
 
     #[must_use]
     pub fn chosen_inline_result(&self) -> Option<&ChosenInlineResult> {
-        self.kind.chosen_inline_result()
+        match &self.kind {
+            UpdateKind::ChosenInlineResult(chosen_inline_result) => Some(chosen_inline_result),
+            _ => None,
+        }
     }
 }
 
@@ -50,56 +68,6 @@ pub enum UpdateKind {
     InlineQuery(InlineQuery),
     ChosenInlineResult(ChosenInlineResult),
     // TODO
-}
-
-impl UpdateKind {
-    #[must_use]
-    pub fn message(&self) -> Option<&Message> {
-        match self {
-            Self::Message(message) => Some(message),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn edited_message(&self) -> Option<&Message> {
-        match self {
-            Self::EditedMessage(message) => Some(message),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn channel_post(&self) -> Option<&Message> {
-        match self {
-            Self::ChannelPost(message) => Some(message),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn edited_channel_post(&self) -> Option<&Message> {
-        match self {
-            Self::EditedChannelPost(message) => Some(message),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn inline_query(&self) -> Option<&InlineQuery> {
-        match self {
-            Self::InlineQuery(inline_query) => Some(inline_query),
-            _ => None,
-        }
-    }
-
-    #[must_use]
-    pub fn chosen_inline_result(&self) -> Option<&ChosenInlineResult> {
-        match self {
-            Self::ChosenInlineResult(chosen_inline_result) => Some(chosen_inline_result),
-            _ => None,
-        }
-    }
 }
 
 mod raw {
