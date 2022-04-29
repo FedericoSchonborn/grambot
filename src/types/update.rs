@@ -16,6 +16,21 @@ impl Update {
     }
 
     #[must_use]
+    pub fn edited_message(&self) -> Option<&Message> {
+        self.kind.edited_message()
+    }
+
+    #[must_use]
+    pub fn channel_post(&self) -> Option<&Message> {
+        self.kind.channel_post()
+    }
+
+    #[must_use]
+    pub fn edited_channel_post(&self) -> Option<&Message> {
+        self.kind.edited_channel_post()
+    }
+
+    #[must_use]
     pub fn inline_query(&self) -> Option<&InlineQuery> {
         self.kind.inline_query()
     }
@@ -41,10 +56,31 @@ impl UpdateKind {
     #[must_use]
     pub fn message(&self) -> Option<&Message> {
         match self {
-            Self::Message(message)
-            | Self::EditedMessage(message)
-            | Self::ChannelPost(message)
-            | Self::EditedChannelPost(message) => Some(message),
+            Self::Message(message) => Some(message),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn edited_message(&self) -> Option<&Message> {
+        match self {
+            Self::EditedMessage(message) => Some(message),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn channel_post(&self) -> Option<&Message> {
+        match self {
+            Self::ChannelPost(message) => Some(message),
+            _ => None,
+        }
+    }
+
+    #[must_use]
+    pub fn edited_channel_post(&self) -> Option<&Message> {
+        match self {
+            Self::EditedChannelPost(message) => Some(message),
             _ => None,
         }
     }

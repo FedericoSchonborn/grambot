@@ -1,6 +1,6 @@
 //! Available types.
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 pub extern crate time;
 
@@ -24,7 +24,6 @@ mod reply_markup;
 #[path = "true.rs"]
 mod true_;
 mod update;
-mod user;
 
 pub use allowed_update::*;
 pub use chat::*;
@@ -44,12 +43,30 @@ pub use reply_keyboard_remove::*;
 pub use reply_markup::*;
 pub use true_::*;
 pub use update::*;
-pub use user::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct ResponseParameters {
     pub migrate_to_chat_id: Option<i64>,
     pub retry_after: Option<i32>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize, Serialize)]
+pub struct User {
+    pub id: i64,
+    pub is_bot: bool,
+    pub first_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub username: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub language_code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_join_groups: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub can_read_all_group_messages: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub supports_inline_queries: Option<bool>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
