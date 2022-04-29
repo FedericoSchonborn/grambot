@@ -14,7 +14,7 @@ pub(crate) const DEFAULT_SERVER: &str = "https://api.telegram.org";
 #[derive(Debug)]
 pub struct Bot {
     pub(crate) client: Client<HttpsConnector<HttpConnector>>,
-    pub(crate) server: String,
+    pub(crate) host: String,
     pub(crate) token: String,
 }
 
@@ -25,7 +25,7 @@ impl Bot {
     {
         Self {
             client: Client::builder().build(HttpsConnector::new()),
-            server: String::from(DEFAULT_SERVER),
+            host: String::from(DEFAULT_SERVER),
             token: token.into(),
         }
     }
@@ -54,7 +54,7 @@ impl Bot {
             .method(R::METHOD)
             .uri(format!(
                 "{server}/bot{token}/{endpoint}",
-                server = self.server,
+                server = self.host,
                 token = self.token,
                 endpoint = R::NAME,
             ))

@@ -6,7 +6,7 @@ use crate::{bot::DEFAULT_SERVER, Bot};
 #[derive(Debug, Clone, Default)]
 pub struct Builder {
     client: Option<Client<HttpsConnector<HttpConnector>>>,
-    server: Option<String>,
+    host: Option<String>,
 }
 
 impl Builder {
@@ -22,11 +22,11 @@ impl Builder {
     }
 
     #[must_use]
-    pub fn server<S>(mut self, value: S) -> Self
+    pub fn host<S>(mut self, value: S) -> Self
     where
         S: Into<String>,
     {
-        self.server = Some(value.into());
+        self.host = Some(value.into());
         self
     }
 
@@ -39,7 +39,7 @@ impl Builder {
             client: self
                 .client
                 .unwrap_or_else(|| Client::builder().build(HttpsConnector::new())),
-            server: self.server.unwrap_or_else(|| String::from(DEFAULT_SERVER)),
+            host: self.host.unwrap_or_else(|| String::from(DEFAULT_SERVER)),
             token: token.into(),
         }
     }
