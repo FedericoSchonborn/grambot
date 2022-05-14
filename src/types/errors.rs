@@ -10,7 +10,7 @@ pub struct ParseChatActionError;
 
 #[derive(Debug, Error)]
 #[error("expected one of `private`, `group`, `supergroup`, `channel`")]
-pub struct ParseChatKindError;
+pub struct ParseChatTypeError;
 
 #[derive(Debug, Error)]
 #[error("expected one of `🎲`, `🎯`, `🎳`, `🏀`, `⚽`, `🎰`")]
