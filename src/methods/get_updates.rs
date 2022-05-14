@@ -2,7 +2,6 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    methods::builders::GetUpdatesBuilder,
     methods::Request,
     types::{AllowedUpdate, Update},
 };
@@ -28,11 +27,6 @@ impl GetUpdates {
             timeout: None,
             allowed_updates: None,
         }
-    }
-
-    #[must_use]
-    pub fn builder() -> GetUpdatesBuilder {
-        GetUpdatesBuilder::new()
     }
 }
 

@@ -1,50 +1,45 @@
-use crate::{methods::GetUpdates, types::AllowedUpdate};
+use crate::{
+    methods::{GetUpdates, Request},
+    types::AllowedUpdate,
+    Bot, Error,
+};
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct GetUpdatesBuilder {
-    offset: Option<i32>,
-    limit: Option<i8>,
-    timeout: Option<i32>,
-    allowed_updates: Option<Vec<AllowedUpdate>>,
+#[derive(Debug, Clone)]
+pub struct GetUpdatesBuilder<'bot> {
+    bot: &'bot Bot,
+    request: GetUpdates,
 }
 
-impl GetUpdatesBuilder {
+impl<'bot> GetUpdatesBuilder<'bot> {
     #[must_use]
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    #[must_use]
-    pub fn offset(mut self, value: i32) -> Self {
-        self.offset = Some(value);
-        self
-    }
-
-    #[must_use]
-    pub fn limit(mut self, value: i8) -> Self {
-        self.limit = Some(value);
-        self
-    }
-
-    #[must_use]
-    pub fn timeout(mut self, value: i32) -> Self {
-        self.timeout = Some(value);
-        self
-    }
-
-    #[must_use]
-    pub fn allowed_updates(mut self, value: Vec<AllowedUpdate>) -> Self {
-        self.allowed_updates = Some(value);
-        self
-    }
-
-    #[must_use]
-    pub fn build(self) -> GetUpdates {
-        GetUpdates {
-            offset: self.offset,
-            limit: self.limit,
-            timeout: self.timeout,
-            allowed_updates: self.allowed_updates,
+    pub fn new(bot: &'bot Bot) -> Self {
+        Self {
+            bot,
+            request: GetUpdates::new(),
         }
+    }
+
+    pub fn offset(&mut self, value: i32) -> &mut Self {
+        self.request.offset = Some(value);
+        self
+    }
+
+    pub fn limit(&mut self, value: i8) -> &mut Self {
+        self.request.limit = Some(value);
+        self
+    }
+
+    pub fn timeout(&mut self, value: i32) -> &mut Self {
+        self.request.timeout = Some(value);
+        self
+    }
+
+    pub fn allowed_updates(&mut self, value: Vec<AllowedUpdate>) -> &mut Self {
+        self.request.allowed_updates = Some(value);
+        self
+    }
+
+    pub async fn send(&self) -> Result<<GetUpdates as Request>::Response, Error> {
+        self.bot.send(&self.request).await
     }
 }

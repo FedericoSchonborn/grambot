@@ -1,18 +1,25 @@
 use hyper::{client::HttpConnector, Client};
 use hyper_tls::HttpsConnector;
 
-use crate::{bot::DEFAULT_SERVER, Bot};
+use crate::{consts::DEFAULT_HOST, Bot};
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct Builder {
+    token: String,
     client: Option<Client<HttpsConnector<HttpConnector>>>,
     host: Option<String>,
 }
 
 impl Builder {
-    #[must_use]
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new<T>(token: T) -> Self
+    where
+        T: Into<String>,
+    {
+        Self {
+            token: token.into(),
+            client: None,
+            host: None,
+        }
     }
 
     #[must_use]
@@ -31,16 +38,13 @@ impl Builder {
     }
 
     #[must_use]
-    pub fn build<T>(self, token: T) -> Bot
-    where
-        T: Into<String>,
-    {
+    pub fn build(self) -> Bot {
         Bot {
+            token: self.token,
             client: self
                 .client
                 .unwrap_or_else(|| Client::builder().build(HttpsConnector::new())),
-            host: self.host.unwrap_or_else(|| String::from(DEFAULT_SERVER)),
-            token: token.into(),
+            host: self.host.unwrap_or_else(|| String::from(DEFAULT_HOST)),
         }
     }
 }

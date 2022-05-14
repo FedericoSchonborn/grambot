@@ -4,18 +4,24 @@ use hyper::{body, client::HttpConnector, Body, Client};
 use hyper_tls::HttpsConnector;
 use serde::Deserialize;
 
-use crate::{error::Error, methods::Request, types::ResponseParameters};
+use crate::{
+    consts::DEFAULT_HOST,
+    error::Error,
+    methods::{
+        builders::{ForwardMessageBuilder, GetUpdatesBuilder, SendDiceBuilder, SendMessageBuilder},
+        Request,
+    },
+    types::{ResponseParameters, Target},
+};
 
 mod builder;
 pub use builder::*;
 
-pub(crate) const DEFAULT_SERVER: &str = "https://api.telegram.org";
-
 #[derive(Debug)]
 pub struct Bot {
-    pub(crate) client: Client<HttpsConnector<HttpConnector>>,
-    pub(crate) host: String,
-    pub(crate) token: String,
+    pub(self) client: Client<HttpsConnector<HttpConnector>>,
+    pub(self) host: String,
+    pub(self) token: String,
 }
 
 impl Bot {
@@ -25,14 +31,16 @@ impl Bot {
     {
         Self {
             client: Client::builder().build(HttpsConnector::new()),
-            host: String::from(DEFAULT_SERVER),
+            host: String::from(DEFAULT_HOST),
             token: token.into(),
         }
     }
 
-    #[must_use]
-    pub fn builder() -> Builder {
-        Builder::new()
+    pub fn builder<T>(token: T) -> Builder
+    where
+        T: Into<String>,
+    {
+        Builder::new(token)
     }
 
     pub async fn send<R>(&self, request: R) -> Result<R::Response, Error>
@@ -53,10 +61,10 @@ impl Bot {
         let request = hyper::Request::builder()
             .method(R::METHOD)
             .uri(format!(
-                "{server}/bot{token}/{endpoint}",
-                server = self.host,
+                "{host}/bot{token}/{name}",
+                host = self.host,
                 token = self.token,
-                endpoint = R::NAME,
+                name = R::NAME,
             ))
             .header("Content-Type", "application/json")
             .body(body)?;
@@ -78,5 +86,38 @@ impl Bot {
                 parameters: response.parameters,
             })
         }
+    }
+
+    #[must_use]
+    pub fn get_updates(&self) -> GetUpdatesBuilder<'_> {
+        GetUpdatesBuilder::new(self)
+    }
+
+    pub fn message<T, S>(&self, target: T, text: S) -> SendMessageBuilder<'_>
+    where
+        T: Into<Target>,
+        S: Into<String>,
+    {
+        SendMessageBuilder::new(self, target, text)
+    }
+
+    pub fn forward_message<T, F>(
+        &self,
+        target: T,
+        from_target: F,
+        message_id: i64,
+    ) -> ForwardMessageBuilder<'_>
+    where
+        T: Into<Target>,
+        F: Into<Target>,
+    {
+        ForwardMessageBuilder::new(self, target, from_target, message_id)
+    }
+
+    pub fn dice<T>(&self, target: T) -> SendDiceBuilder<'_>
+    where
+        T: Into<Target>,
+    {
+        SendDiceBuilder::new(self, target)
     }
 }

@@ -2,7 +2,6 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    methods::builders::SendDiceBuilder,
     methods::Request,
     types::{DiceEmoji, Message, ReplyMarkup, Target},
 };
@@ -38,11 +37,6 @@ impl SendDice {
             allow_sending_without_reply: None,
             reply_markup: None,
         }
-    }
-
-    #[must_use]
-    pub fn builder() -> SendDiceBuilder {
-        SendDiceBuilder::new()
     }
 }
 

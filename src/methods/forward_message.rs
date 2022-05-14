@@ -2,7 +2,6 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    methods::builders::ForwardMessageBuilder,
     methods::Request,
     types::{Message, Target},
 };
@@ -31,11 +30,6 @@ impl ForwardMessage {
             disable_notification: None,
             protect_content: None,
         }
-    }
-
-    #[must_use]
-    pub fn builder() -> ForwardMessageBuilder {
-        ForwardMessageBuilder::new()
     }
 }
 

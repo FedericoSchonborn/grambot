@@ -29,3 +29,12 @@ pub trait Request: Serialize {
     const METHOD: Method;
     type Response: DeserializeOwned;
 }
+
+impl<T> Request for &'_ T
+where
+    T: Request,
+{
+    const NAME: &'static str = T::NAME;
+    const METHOD: Method = T::METHOD;
+    type Response = T::Response;
+}

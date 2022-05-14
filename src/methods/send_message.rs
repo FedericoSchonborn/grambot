@@ -2,7 +2,6 @@ use hyper::Method;
 use serde::Serialize;
 
 use crate::{
-    methods::builders::SendMessageBuilder,
     methods::Request,
     types::{Message, MessageEntity, ParseMode, ReplyMarkup, Target},
 };
@@ -47,11 +46,6 @@ impl SendMessage {
             allow_sending_without_reply: None,
             reply_markup: None,
         }
-    }
-
-    #[must_use]
-    pub fn builder() -> SendMessageBuilder {
-        SendMessageBuilder::new()
     }
 }
 

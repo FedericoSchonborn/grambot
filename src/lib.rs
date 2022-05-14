@@ -9,6 +9,7 @@
 )]
 
 pub mod bot;
+pub mod consts;
 mod error;
 pub mod methods;
 pub mod types;
