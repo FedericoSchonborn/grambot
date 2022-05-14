@@ -4,12 +4,12 @@ use serde::Serialize;
 use crate::{
     methods::builders::SendMessageBuilder,
     methods::Request,
-    types::{ChatId, Message, MessageEntity, ParseMode, ReplyMarkup},
+    types::{Message, MessageEntity, ParseMode, ReplyMarkup, Target},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct SendMessage {
-    pub chat_id: ChatId,
+    pub chat_id: Target,
     pub text: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_mode: Option<ParseMode>,
@@ -30,13 +30,13 @@ pub struct SendMessage {
 }
 
 impl SendMessage {
-    pub fn new<C, T>(chat_id: C, text: T) -> Self
+    pub fn new<T, S>(target: T, text: S) -> Self
     where
-        C: Into<ChatId>,
-        T: Into<String>,
+        T: Into<Target>,
+        S: Into<String>,
     {
         Self {
-            chat_id: chat_id.into(),
+            chat_id: target.into(),
             text: text.into(),
             parse_mode: None,
             entities: None,

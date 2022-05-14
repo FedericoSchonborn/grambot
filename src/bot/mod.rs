@@ -40,7 +40,7 @@ impl Bot {
         R: Request,
     {
         #[derive(Deserialize)]
-        pub struct Response<T> {
+        struct Response<T> {
             ok: bool,
             description: Option<String>,
             result: Option<T>,
@@ -68,12 +68,12 @@ impl Bot {
         if response.ok {
             Ok(response
                 .result
-                .expect("result field is missing in ok response"))
+                .expect("successful response is missing result"))
         } else {
             Err(Error::Response {
                 description: response
                     .description
-                    .expect("description field is missing in error response"),
+                    .expect("error response is missing description"),
                 error_code: response.error_code,
                 parameters: response.parameters,
             })

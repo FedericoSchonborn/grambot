@@ -1,6 +1,6 @@
 use crate::{
     methods::SendMessage,
-    types::{ChatId, MessageEntity, ParseMode, ReplyMarkup},
+    types::{MessageEntity, ParseMode, ReplyMarkup, Target},
 };
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -72,13 +72,13 @@ impl SendMessageBuilder {
         self
     }
 
-    pub fn build<C, T>(self, chat_id: C, text: T) -> SendMessage
+    pub fn build<T, S>(self, target: T, text: S) -> SendMessage
     where
-        C: Into<ChatId>,
-        T: Into<String>,
+        T: Into<Target>,
+        S: Into<String>,
     {
         SendMessage {
-            chat_id: chat_id.into(),
+            chat_id: target.into(),
             text: text.into(),
             parse_mode: self.parse_mode,
             entities: self.entities,

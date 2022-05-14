@@ -3,18 +3,18 @@ use serde::Serialize;
 
 use crate::{
     methods::Request,
-    types::{Chat, ChatId},
+    types::{Chat, Target},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
-pub struct GetChat(#[serde(rename = "chat_id")] pub ChatId);
+pub struct GetChat(#[serde(rename = "chat_id")] pub Target);
 
 impl GetChat {
-    pub fn new<C>(chat_id: C) -> Self
+    pub fn new<T>(target: T) -> Self
     where
-        C: Into<ChatId>,
+        T: Into<Target>,
     {
-        Self(chat_id.into())
+        Self(target.into())
     }
 }
 

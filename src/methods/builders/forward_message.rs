@@ -1,4 +1,4 @@
-use crate::{methods::ForwardMessage, types::ChatId};
+use crate::{methods::ForwardMessage, types::Target};
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ForwardMessageBuilder {
@@ -24,14 +24,14 @@ impl ForwardMessageBuilder {
         self
     }
 
-    pub fn build<C, F>(self, chat_id: C, from_chat_id: F, message_id: i64) -> ForwardMessage
+    pub fn build<T, F>(self, target: T, from_target: F, message_id: i64) -> ForwardMessage
     where
-        C: Into<ChatId>,
-        F: Into<ChatId>,
+        T: Into<Target>,
+        F: Into<Target>,
     {
         ForwardMessage {
-            chat_id: chat_id.into(),
-            from_chat_id: from_chat_id.into(),
+            chat_id: target.into(),
+            from_chat_id: from_target.into(),
             message_id,
             disable_notification: self.disable_notification,
             protect_content: self.protect_content,

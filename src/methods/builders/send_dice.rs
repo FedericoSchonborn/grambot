@@ -1,6 +1,6 @@
 use crate::{
     methods::SendDice,
-    types::{ChatId, DiceEmoji, ReplyMarkup},
+    types::{DiceEmoji, ReplyMarkup, Target},
 };
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -58,12 +58,12 @@ impl SendDiceBuilder {
         self
     }
 
-    pub fn build<C>(self, chat_id: C) -> SendDice
+    pub fn build<T>(self, target: T) -> SendDice
     where
-        C: Into<ChatId>,
+        T: Into<Target>,
     {
         SendDice {
-            chat_id: chat_id.into(),
+            chat_id: target.into(),
             emoji: self.emoji,
             disable_notification: self.disable_notification,
             protect_content: self.protect_content,

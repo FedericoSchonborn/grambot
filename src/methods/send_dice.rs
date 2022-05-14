@@ -4,12 +4,12 @@ use serde::Serialize;
 use crate::{
     methods::builders::SendDiceBuilder,
     methods::Request,
-    types::{ChatId, DiceEmoji, Message, ReplyMarkup},
+    types::{DiceEmoji, Message, ReplyMarkup, Target},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct SendDice {
-    pub chat_id: ChatId,
+    pub chat_id: Target,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub emoji: Option<DiceEmoji>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -25,12 +25,12 @@ pub struct SendDice {
 }
 
 impl SendDice {
-    pub fn new<C>(chat_id: C) -> Self
+    pub fn new<T>(target: T) -> Self
     where
-        C: Into<ChatId>,
+        T: Into<Target>,
     {
         Self {
-            chat_id: chat_id.into(),
+            chat_id: target.into(),
             emoji: None,
             disable_notification: None,
             protect_content: None,

@@ -3,22 +3,22 @@ use serde::Serialize;
 
 use crate::{
     methods::Request,
-    types::{ChatAction, ChatId, True},
+    types::{ChatAction, Target, True},
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct SendChatAction {
-    pub chat_id: ChatId,
+    pub chat_id: Target,
     pub action: ChatAction,
 }
 
 impl SendChatAction {
-    pub fn new<C>(chat_id: C, action: ChatAction) -> Self
+    pub fn new<T>(target: T, action: ChatAction) -> Self
     where
-        C: Into<ChatId>,
+        T: Into<Target>,
     {
         Self {
-            chat_id: chat_id.into(),
+            chat_id: target.into(),
             action,
         }
     }
