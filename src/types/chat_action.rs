@@ -44,7 +44,7 @@ impl ChatAction {
 
 impl Display for ChatAction {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str(self.as_str())
+        self.as_str().fmt(f)
     }
 }
 

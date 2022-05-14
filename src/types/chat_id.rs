@@ -5,15 +5,17 @@ use serde::Serialize;
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(untagged)]
 pub enum ChatId {
+    /// Unique identifier of the target chat.
     Integer(i64),
+    /// Username of the target channel (in the format `@channelname`).
     String(String),
 }
 
 impl Display for ChatId {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
-            Self::Integer(value) => write!(f, "{}", value),
-            Self::String(value) => write!(f, "{}", value),
+            Self::Integer(value) => value.fmt(f),
+            Self::String(value) => value.fmt(f),
         }
     }
 }

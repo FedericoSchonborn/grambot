@@ -50,7 +50,7 @@ impl AllowedUpdate {
 
 impl Display for AllowedUpdate {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str(self.as_str())
+        self.as_str().fmt(f)
     }
 }
 
