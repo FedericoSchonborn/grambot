@@ -25,7 +25,7 @@ impl SendChatAction {
 }
 
 impl Request for SendChatAction {
-    const NAME: &'static str = "sendChatAction";
+    const ENDPOINT: &'static str = "sendChatAction";
     const METHOD: Method = Method::POST;
-    type Response = True;
+    type Output = True;
 }

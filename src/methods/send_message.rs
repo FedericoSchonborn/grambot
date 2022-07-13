@@ -50,7 +50,7 @@ impl SendMessage {
 }
 
 impl Request for SendMessage {
-    const NAME: &'static str = "sendMessage";
+    const ENDPOINT: &'static str = "sendMessage";
     const METHOD: Method = Method::POST;
-    type Response = Message;
+    type Output = Message;
 }

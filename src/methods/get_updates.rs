@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use hyper::Method;
 use serde::Serialize;
 
@@ -31,7 +33,7 @@ impl GetUpdates {
 }
 
 impl Request for GetUpdates {
-    const NAME: &'static str = "getUpdates";
+    const ENDPOINT: &'static str = "getUpdates";
     const METHOD: Method = Method::GET;
-    type Response = Vec<Update>;
+    type Output = VecDeque<Update>;
 }

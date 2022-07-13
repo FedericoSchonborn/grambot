@@ -41,7 +41,7 @@ impl SendDice {
 }
 
 impl Request for SendDice {
-    const NAME: &'static str = "sendDice";
+    const ENDPOINT: &'static str = "sendDice";
     const METHOD: Method = Method::POST;
-    type Response = Message;
+    type Output = Message;
 }

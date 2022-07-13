@@ -65,7 +65,7 @@ impl<'bot> SendMessageBuilder<'bot> {
         self
     }
 
-    pub async fn send(&self) -> Result<<SendMessage as Request>::Response, Error> {
+    pub async fn send(&self) -> Result<<SendMessage as Request>::Output, Error> {
         self.bot.send(&self.request).await
     }
 }

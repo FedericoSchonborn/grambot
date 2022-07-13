@@ -12,6 +12,7 @@ pub mod bot;
 pub mod consts;
 mod error;
 pub mod methods;
+pub mod stream;
 pub mod types;
 
 #[doc(inline)]

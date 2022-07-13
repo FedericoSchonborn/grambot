@@ -7,7 +7,7 @@ use crate::{methods::Request, types::True};
 pub struct Close;
 
 impl Request for Close {
-    const NAME: &'static str = "close";
+    const ENDPOINT: &'static str = "close";
     const METHOD: Method = Method::POST;
-    type Response = True;
+    type Output = True;
 }

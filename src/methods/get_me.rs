@@ -7,7 +7,7 @@ use crate::{methods::Request, types::User};
 pub struct GetMe;
 
 impl Request for GetMe {
-    const NAME: &'static str = "getMe";
+    const ENDPOINT: &'static str = "getMe";
     const METHOD: Method = Method::GET;
-    type Response = User;
+    type Output = User;
 }

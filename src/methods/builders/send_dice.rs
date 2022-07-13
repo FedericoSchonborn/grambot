@@ -54,7 +54,7 @@ impl<'bot> SendDiceBuilder<'bot> {
         self
     }
 
-    pub async fn send(&self) -> Result<<SendDice as Request>::Response, Error> {
+    pub async fn send(&self) -> Result<<SendDice as Request>::Output, Error> {
         self.bot.send(&self.request).await
     }
 }

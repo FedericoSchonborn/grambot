@@ -32,7 +32,7 @@ impl<'bot> ForwardMessageBuilder<'bot> {
         self
     }
 
-    pub async fn send(&self) -> Result<<ForwardMessage as Request>::Response, Error> {
+    pub async fn send(&self) -> Result<<ForwardMessage as Request>::Output, Error> {
         self.bot.send(&self.request).await
     }
 }

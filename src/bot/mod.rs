@@ -9,8 +9,9 @@ use crate::{
     error::Error,
     methods::{
         builders::{ForwardMessageBuilder, GetUpdatesBuilder, SendDiceBuilder, SendMessageBuilder},
-        Request,
+        GetUpdates, Request,
     },
+    stream::UpdateStream,
     types::{ResponseParameters, Target},
 };
 
@@ -43,7 +44,7 @@ impl Bot {
         Builder::new(token)
     }
 
-    pub async fn send<R>(&self, request: R) -> Result<R::Response, Error>
+    pub async fn send<R>(&self, request: R) -> Result<R::Output, Error>
     where
         R: Request,
     {
@@ -61,18 +62,22 @@ impl Bot {
         let request = hyper::Request::builder()
             .method(R::METHOD)
             .uri(format!(
-                "{host}/bot{token}/{name}",
+                "{host}/bot{token}/{endpoint}",
                 host = self.host,
                 token = self.token,
-                name = R::NAME,
+                endpoint = R::ENDPOINT,
             ))
+            .header(
+                "User-Agent",
+                concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),),
+            )
             .header("Content-Type", "application/json")
             .body(body)?;
 
         let body = self.client.request(request).await?.into_body();
         let bytes = body::to_bytes(body).await?;
 
-        let response: Response<R::Response> = serde_json::from_slice(&bytes)?;
+        let response: Response<R::Output> = serde_json::from_slice(&bytes)?;
         if response.ok {
             Ok(response
                 .result
@@ -86,6 +91,11 @@ impl Bot {
                 parameters: response.parameters,
             })
         }
+    }
+
+    #[must_use]
+    pub fn stream_updates(&self) -> UpdateStream<'_> {
+        UpdateStream::new(self, GetUpdates::default())
     }
 
     #[must_use]

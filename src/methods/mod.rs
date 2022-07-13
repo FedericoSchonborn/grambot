@@ -25,16 +25,16 @@ pub use send_dice::*;
 pub use send_message::*;
 
 pub trait Request: Serialize {
-    const NAME: &'static str;
+    const ENDPOINT: &'static str;
     const METHOD: Method;
-    type Response: DeserializeOwned;
+    type Output: DeserializeOwned;
 }
 
 impl<T> Request for &'_ T
 where
     T: Request,
 {
-    const NAME: &'static str = T::NAME;
+    const ENDPOINT: &'static str = T::ENDPOINT;
     const METHOD: Method = T::METHOD;
-    type Response = T::Response;
+    type Output = T::Output;
 }

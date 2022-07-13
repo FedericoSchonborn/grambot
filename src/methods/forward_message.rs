@@ -34,7 +34,7 @@ impl ForwardMessage {
 }
 
 impl Request for ForwardMessage {
-    const NAME: &'static str = "forwardMessage";
+    const ENDPOINT: &'static str = "forwardMessage";
     const METHOD: Method = Method::POST;
-    type Response = Message;
+    type Output = Message;
 }

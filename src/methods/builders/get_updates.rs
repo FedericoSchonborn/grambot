@@ -39,7 +39,7 @@ impl<'bot> GetUpdatesBuilder<'bot> {
         self
     }
 
-    pub async fn send(&self) -> Result<<GetUpdates as Request>::Response, Error> {
+    pub async fn send(&self) -> Result<<GetUpdates as Request>::Output, Error> {
         self.bot.send(&self.request).await
     }
 }

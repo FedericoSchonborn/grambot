@@ -19,7 +19,7 @@ impl GetChat {
 }
 
 impl Request for GetChat {
-    const NAME: &'static str = "getChat";
+    const ENDPOINT: &'static str = "getChat";
     const METHOD: Method = Method::GET;
-    type Response = Chat;
+    type Output = Chat;
 }
